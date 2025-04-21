@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean GATE - Product Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #666666;
+            --accent-color: #000000;
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --hover-color: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Inter', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --hover-color: #2d2d2d;
+        }
+
+        .navbar {
+            background-color: var(--bg-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-brand p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-link.active {
+            font-weight: 600;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .nav-link.active:after {
+            content: "";
+            position: absolute;
+            width: 30%;
+            height: 2px;
+            background: var(--text-color);
+            bottom: 0;
+            left: 35%;
+        }
+
+        .btn-login {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-login:hover {
+            opacity: 0.9;
+            color: var(--bg-color);
+        }
+
+        .marketplace-hero {
+            padding: 6rem 0 5rem;
+            background-color: var(--bg-color);
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .marketplace-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .marketplace-hero .lead {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-card {
+            position: relative;
+        }
+
+        .card-img-top {
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 1;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 4px;
+        }
+
+        .bg-primary {
+            background-color: #000 !important;
+        }
+
+        .bg-secondary {
+            background-color: #666 !important;
+        }
+
+        .btn-dark {
+            background-color: var(--text-color);
+            border-color: var(--text-color);
+            color: var(--bg-color);
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .btn-dark:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            border-radius: 6px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .footer {
+            background-color: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        .footer a {
+            color: var(--text-color);
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Product Detail Styles */
+        .product-detail {
+            padding: 2.5rem;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .product-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .product-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .price-tag {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .feature-item {
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            color: var(--text-color);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .integration-badge {
+            background-color: var(--hover-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .testimonial {
+            background-color: var(--hover-color);
+            border-left: 3px solid var(--text-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .section-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 2.5rem 0;
+        }
+
+        #productBackBtn {
+            margin-bottom: 1.5rem;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #loadingIndicator {
+            display: none;
+            text-align: center;
+            padding: 5rem 0;
+        }
+
+        .similar-products {
+            margin-top: 3rem;
+        }
+
+        .similar-product-card {
+            height: 100%;
+        }
+
+        .similar-product-img {
+            height: 160px;
+            object-fit: cover;
+        }
+
+        /* Sticky back button */
+        .sticky-back {
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            background-color: var(--bg-color);
+            padding: 1rem 0;
+        }
+
+        /* Category tags */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-tags .badge {
+            cursor: pointer;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .category-tags .badge:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* Section headings */
+        h3, h4 {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        /* Placeholder for empty sections */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background-color: var(--hover-color);
+            border-radius: 8px;
+            color: var(--secondary-color);
+        }
+
+        /* Buttons */
+        .btn {
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--text-color);
+            border-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            background-color: var(--text-color);
+            border-color: var(--text-color);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            background: transparent;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* Spinner */
+        .spinner-border {
+            color: var(--text-color);
+        }
+
+        /* Filter section */
+        .filter-section {
+            background-color: var(--hover-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Use case list */
+        .use-case-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .use-case-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .use-case-item:last-child {
+            border-bottom: none;
+        }
+
+        .use-case-icon {
+            margin-right: 12px;
+            background-color: var(--hover-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <p>Ocean</p>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html#features">Features</a>
+                <a class="nav-link" href="index.html#how-it-works">How It Works</a>
+                <a class="nav-link" href="index.html#pricing">Pricing</a>
+                <a class="nav-link active" href="gate.html">GATE</a>
+                <button class="btn btn-login ms-3">Log In</button>
+                <button onclick="toggleTheme()" 
+                class="btn btn-sm btn-outline-dark ms-3" 
+                id="themeToggle" 
+                data-theme="dark">
+                    🌙
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="marketplace-hero">
+        <div class="container">
+            <h1>Ocean GATE</h1>
+            <p class="lead">Your gateway to premium AI solution providers and services.</p>
+            <p>Browse our curated marketplace of vetted AI vendors and specialized services.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Services List View -->
+        <div id="servicesView">
+            <div class="filter-section mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="categoryFilter" class="form-label">Filter by Category</label>
+                            <select class="form-select" id="categoryFilter">
+                                <option value="">All Categories</option>
+                                <option value="nlp">Natural Language Processing</option>
+                                <option value="vision">Computer Vision</option>
+                                <option value="analytics">Data Analytics</option>
+                                <option value="automation">Automation</option>
+                                <option value="chatbots">Chatbots & Assistants</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="pricingFilter" class="form-label">Pricing Model</label>
+                            <select class="form-select" id="pricingFilter">
+                                <option value="">All Pricing Models</option>
+                                <option value="subscription">Subscription</option>
+                                <option value="usage">Usage-based</option>
+                                <option value="enterprise">Enterprise</option>
+                                <option value="freemium">Freemium</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="searchServices" class="form-label">Search Services</label>
+                            <input type="text" class="form-control" id="searchServices" placeholder="Search by name or keyword">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mb-4">Featured Services</h3>
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                <!-- Featured service cards will be generated here -->
+            </div>
+
+            <h3 class="mb-4">All Services</h3>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <!-- Service cards will be generated here -->
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading product details...</p>
+        </div>
+
+        <!-- Product Detail View -->
+        <div id="productDetailView" style="display: none;">
+            <div class="sticky-back">
+                <button id="productBackBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to All Services
+                </button>
+            </div>
+            
+            <div class="product-detail">
+                <div class="product-header">
+                    <img id="productLogo" src="" alt="Product Logo" class="product-logo">
+                    <div>
+                        <h2 id="productName"></h2>
+                        <div id="productTags"></div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <h4>About</h4>
+                        <p id="productDescription" class="mb-4"></p>
+                        
+                        <div class="mb-4">
+                            <span id="pricingModel" class="price-tag"></span>
+                            <p id="pricingDetails"></p>
+                        </div>
+                        
+                        <h4>Key Features</h4>
+                        <div id="productFeatures"></div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card p-3 mb-4">
+                            <h5>Provider Info</h5>
+                            <p id="providerName" class="mb-1"></p>
+                            <p id="providerLocation" class="mb-1 text-muted"></p>
+                            <p id="providerFoundedYear" class="mb-3 text-muted"></p>
+                            <a id="providerWebsite" href="#" target="_blank" class="btn btn-outline-primary mb-2">Visit Website</a>
+                            <button class="btn btn-primary">Request Demo</button>
+                        </div>
+                        
+                        <div class="card p-3">
+                            <h5>Integrations</h5>
+                            <div id="productIntegrations"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Customer Testimonials</h4>
+                <div id="productTestimonials" class="mb-4"></div>
+                
+                <h4>Use Cases</h4>
+                <div id="productUseCases" class="mb-4"></div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <button class="btn btn-primary me-md-2">Get Started</button>
+                    <button class="btn btn-outline-secondary">Contact Sales</button>
+                </div>
+            </div>
+            
+            <div class="similar-products">
+                <h4>Similar Services</h4>
+                <div class="row row-cols-1 row-cols-md-4 g-4" id="similarProducts">
+                    <!-- Similar products will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <p class="mt-2">© 2025 Ocean. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample product data (in a real app, this would come from a backend API)
+        const productsData = [
+            {
+                id: 1,
+                name: "AI Data Analytics",
+                shortDescription: "Transform your business data into actionable insights with our AI-powered analytics platform.",
+                fullDescription: "Our AI Data Analytics platform uses advanced machine learning algorithms to analyze your business data and provide actionable insights. The platform can process structured and unstructured data from various sources, identify patterns, predict trends, and generate comprehensive reports.",
+                imageUrl: "https://i.pinimg.com/736x/31/06/89/310689b7853211dea7a66c97a5ec6e6e.jpg",
+                tags: ["Data Analytics", "Predictive Models"],
+                featured: true,
+                pricingModel: "Subscription",
+                pricingDetails: "Starting at $499/month. Enterprise plans available.",
+                features: [
+                    "Real-time data processing and analysis",
+                    "Customizable dashboards and reports",
+                    "Predictive analytics and trend forecasting",
+                    "Data visualization tools",
+                    "Automated insights and recommendations"
+                ],
+                provider: {
+                    name: "DataMinds AI",
+                    location: "San Francisco, CA",
+                    foundedYear: "2018",
+                    website: "#"
+                },
+                integrations: ["Salesforce", "Microsoft Power BI", "Google Analytics", "AWS", "Tableau"],
+                testimonials: [
+                    {
+                        quote: "The AI Data Analytics platform has transformed how we make business decisions. We've seen a 30% increase in operational efficiency since implementation.",
+                        author: "Jane Smith, CTO at Global Retail Inc."
+                    },
+                    {
+                        quote: "The predictive analytics feature helped us anticipate market shifts and stay ahead of our competition.",
+                        author: "Mark Johnson, Data Science Director at TechCorp"
+                    }
+                ],
+                useCases: [
+                    "Sales forecasting and inventory optimization",
+                    "Customer behavior analysis and personalization",
+                    "Market trend analysis and competitive intelligence",
+                    "Operational efficiency improvement",
+                    "Risk assessment and management"
+                ],
+                category: "analytics"
+            },
+            {
+                id: 2,
+                name: "NLP Solution Suite",
+                shortDescription: "Advanced natural language processing tools for sentiment analysis, content generation, and more.",
+                fullDescription: "Our comprehensive NLP Solution Suite provides businesses with powerful tools to understand, analyze, and generate human language. From sentiment analysis to content generation, our suite addresses a wide range of language processing needs with state-of-the-art AI models.",
+                imageUrl: "https://i.pinimg.com/736x/13/dc/66/13dc66ebb446e1823ee20aebaaac2aa3.jpg",
+                tags: ["NLP", "Content Analysis"],
+                featured: true,
+                pricingModel: "Usage-based",
+                pricingDetails: "$0.01 per API call. Volume discounts available.",
+                features: [
+                    "Advanced sentiment analysis with 95% accuracy",
+                    "Multi-language support for over 50 languages",
+                    "Context-aware content generation",
+                    "Named entity recognition and extraction",
+                    "Document summarization and classification"
+                ],
+                provider: {
+                    name: "LinguaTech AI",
+                    location: "Boston, MA",
+                    foundedYear: "2019",
+                    website: "#"
+                },
+                integrations: ["Zendesk", "HubSpot", "Slack", "Microsoft Teams", "WordPress"],
+                testimonials: [
+                    {
+                        quote: "The sentiment analysis feature has been a game-changer for our customer service team. We can now quickly identify and address negative feedback.",
+                        author: "Alex Chen, Customer Experience Manager at ServiceFirst"
+                    },
+                    {
+                        quote: "We've automated 60% of our content creation process using the NLP Suite, saving us countless hours and resources.",
+                        author: "Sarah Williams, Content Director at DigitalMedia Co."
+                    }
+                ],
+                useCases: [
+                    "Customer feedback analysis and response prioritization",
+                    "Automated content creation for marketing materials",
+                    "Social media monitoring and brand sentiment tracking",
+                    "Legal document analysis and contract review",
+                    "Multilingual customer support automation"
+                ],
+                category: "nlp"
+            },
+            {
+                id: 3,
+                name: "Enterprise AI Assistant",
+                shortDescription: "Customizable AI assistant that integrates with your business workflows and knowledge base.",
+                fullDescription: "Our Enterprise AI Assistant is a fully customizable virtual assistant that integrates seamlessly with your business workflows and knowledge base. It provides intelligent support for both internal teams and customers while continuously learning from interactions to improve its capabilities.",
+                imageUrl: "https://i.pinimg.com/736x/ec/44/7b/ec447b45325ecb0ce8a6bdf565b643c6.jpg",
+                tags: ["Chatbots", "Enterprise"],
+                featured: true,
+                pricingModel: "Enterprise",
+                pricingDetails: "Custom pricing based on organization size and requirements. Contact sales for details.",
+                features: [
+                    "Deep integration with enterprise systems and knowledge bases",
+                    "Natural conversation capabilities with context retention",
+                    "Customizable responses and personality",
+                    "Multi-channel deployment (web, mobile, messaging platforms)",
+                    "Continuous learning and improvement from interactions"
+                ],
+                provider: {
+                    name: "AssistAI",
+                    location: "Seattle, WA",
+                    foundedYear: "2020",
+                    website: "#"
+                },
+                integrations: ["Microsoft 365", "Google Workspace", "Salesforce", "ServiceNow", "Jira"],
+                testimonials: [
+                    {
+                        quote: "Our AI Assistant handles over 70% of routine customer inquiries, allowing our support team to focus on complex issues that require human expertise.",
+                        author: "Michael Brown, Support Director at EnterpriseCloud"
+                    },
+                    {
+                        quote: "The internal deployment of the AI Assistant has dramatically improved our employee productivity by providing instant access to company knowledge and automating routine tasks.",
+                        author: "Lisa Garcia, CIO at Global Innovations"
+                    }
+                ],
+                useCases: [
+                    "24/7 customer support and query resolution",
+                    "Internal employee assistance for IT and HR inquiries",
+                    "Sales support and lead qualification",
+                    "Process guidance and workflow automation",
+                    "Knowledge management and information retrieval"
+                ],
+                category: "chatbots"
+            },
+            // Additional products would be added here
+        ];
+
+        // Function to generate service cards
+        function generateServiceCards() {
+            const featuredContainer = document.querySelector('.row-cols-md-3');
+            const allServicesContainer = document.querySelector('.row-cols-md-4');
+            
+            featuredContainer.innerHTML = '';
+            allServicesContainer.innerHTML = '';
+            
+            productsData.forEach(product => {
+                const card = `
+                    <div class="col">
+                        <div class="card service-card" data-product-id="${product.id}">
+                            ${product.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                            <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${product.name}</h5>
+                                <p class="card-text">${product.shortDescription}</p>
+                                <div class="mt-2 mb-3">
+                                    ${product.tags.map(tag => `<span class="badge ${product.tags.indexOf(tag) === 0 ? 'bg-primary' : 'bg-secondary'}">${tag}</span>`).join(' ')}
+                                </div>
+                                <a href="#" class="btn btn-dark learn-more-btn" data-product-id="${product.id}">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                if (product.featured) {
+                    featuredContainer.innerHTML += card;
+                } else {
+                    allServicesContainer.innerHTML += card;
+                }
+            });
+            
+            // Add event listeners to all "Learn More" buttons
+            document.querySelectorAll('.learn-more-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.getAttribute('data-product-id');
+                    showProductDetails(productId);
+                });
+            });
+        }
+
+        // Function to show product details
+        function showProductDetails(productId) {
+            // Show loading indicator
+            document.getElementById('servicesView').style.display = 'none';
+            document.getElementById('loadingIndicator').style.display = 'block';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Hide loading indicator
+                document.getElementById('loadingIndicator').style.display = 'none';
+                
+                // Find the product by ID
+                const product = productsData.find(p => p.id == productId);
+                
+                if (product) {
+                    // Populate product details
+                    document.getElementById('productLogo').src = product.imageUrl;
+                    document.getElementById('productName').textContent = product.name;
+                    
+                    // Generate tags
+                    const tagsHtml = product.tags.map(tag => 
+                        `<span class="badge ${product.tags.indexOf(tag) === 0 ? 'bg-primary' : 'bg-secondary'} me-1">${tag}</span>`
+                    ).join('');
+                    document.getElementById('productTags').innerHTML = tagsHtml;
+                    
+                    document.getElementById('productDescription').textContent = product.fullDescription;
+                    document.getElementById('pricingModel').textContent = product.pricingModel;
+                    document.getElementById('pricingDetails').textContent = product.pricingDetails;
+                    
+                    // Generate features
+                    const featuresHtml = product.features.map(feature => 
+                        `<div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div>${feature}</div>
+                        </div>`
+                    ).join('');
+                    document.getElementById('productFeatures').innerHTML = featuresHtml;
+                    
+                    // Provider info
+                    document.getElementById('providerName').textContent = product.provider.name;
+                    document.getElementById('providerLocation').textContent = product.provider.location;
+                    document.getElementById('providerFoundedYear').textContent = `Founded in ${product.provider.foundedYear}`;
+                    document.getElementById('providerWebsite').href = product.provider.website;
+                    
+                    // Integrations
+                    const integrationsHtml = product.integrations.map(integration => 
+                        `<span class="integration-badge">${integration}</span>`
+                    ).join('');
+                    document.getElementById('productIntegrations').innerHTML = integrationsHtml;
+                    
+                    // Testimonials
+                    const testimonialsHtml = product.testimonials.map(testimonial => 
+                        `<div class="testimonial">
+                            <p class="mb-1">"${testimonial.quote}"</p>
+                            <small class="text-muted">- ${testimonial.author}</small>
+                        </div>`
+                    ).join('');
+                    document.getElementById('productTestimonials').innerHTML = testimonialsHtml;
+                    
+                    // Use Cases
+                    const useCasesHtml = `<ul class="ps-3">
+                        ${product.useCases.map(useCase => `<li class="mb-2">${useCase}</li>`).join('')}
+                    </ul>`;
+                    document.getElementById('productUseCases').innerHTML = useCasesHtml;
+                    
+                    // Generate similar products based on category
+                    const similarProducts = productsData
+                        .filter(p => p.category === product.category && p.id !== product.id)
+                        .slice(0, 4);
+                    
+                    const similarProductsHtml = similarProducts.map(p => 
+                        `<div class="col">
+                            <div class="card similar-product-card">
+                                <img src="${p.imageUrl}" class="card-img-top similar-product-img" alt="${p.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${p.name}</h5>
+                                    <p class="card-text small">${p.shortDescription.substring(0, 80)}${p.shortDescription.length > 80 ? '...' : ''}</p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary learn-more-btn" data-product-id="${p.id}">Learn More</a>
+                                </div>
+                            </div>
+                        </div>`
+                    ).join('');
+                    
+                    document.getElementById('similarProducts').innerHTML = similarProductsHtml;
+                    
+                    // Add event listeners to similar product buttons
+                    document.querySelectorAll('#similarProducts .learn-more-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const pid = this.getAttribute('data-product-id');
+                            showProductDetails(pid);
+                            // Scroll to top when viewing a new product
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        });
+                    });
+                    
+                    // Show product detail view
+                    document.getElementById('productDetailView').style.display = 'block';
+                    
+                    // Add back button functionality
+                    document.getElementById('productBackBtn').addEventListener('click', function() {
+                        document.getElementById('productDetailView').style.display = 'none';
+                        document.getElementById('servicesView').style.display = 'block';
+                    });
+                }
+            }, 800); // Simulate a delay for API call
+        }
+
+        // Function to toggle theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update emoji based on current theme
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            
+            // Save theme preference
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load theme preference on page load
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '☀️';
+            } else {
+                themeToggle.innerHTML = '🌙';
+            }
+            
+            // Generate service cards
+            generateServiceCards();
+        };
+    </script>
+</body>
+</html>

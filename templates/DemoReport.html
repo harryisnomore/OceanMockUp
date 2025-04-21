@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCEAN-A | Automated Assessment Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .card-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #000000, #4b5563);
+        }
+        .report-section {
+            transition: all 0.3s ease;
+        }
+        .report-section:hover {
+            transform: scale(1.02);
+        }
+        .star-rating .star {
+            transition: all 0.2s ease;
+        }
+        .star-rating:hover .star {
+            transform: scale(1.1);
+        }
+        .card-3d {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-3d:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .report-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        .blurred-content {
+            filter: blur(6px);
+            opacity: 0.9;
+            position: relative;
+            pointer-events: none;
+            transition: filter 0.5s ease, opacity 0.5s ease;
+        }
+        .blur-container {
+            position: relative;
+        }
+        .blur-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8));
+            z-index: 5;
+            pointer-events: none;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            pointer-events: auto;
+        }
+        .overlay i {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .overlay h3 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .overlay button {
+            background: #000;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: medium;
+            transition: background 0.3s ease;
+            pointer-events: auto;
+        }
+        .overlay button:hover {
+            background: #333;
+        }
+        .company-info-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans antialiased">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-xl">A</span>
+                </div>
+                <h1 class="text-2xl font-bold gradient-text">OCEAN-A</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="font-medium hover:text-gray-600 transition">Home</a>
+                <a href="#" class="font-medium hover:text-gray-600 transition">Pricing</a>
+            </nav>
+            <button class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Report Display Section (Top 30%) -->
+        <section class="mb-12">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <!-- Report Header -->
+                <div class="bg-gray-100 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold">Claude AI Assessment Report</h3>
+                        <p class="text-gray-600">Generated: <span class="font-medium">April 17, 2025</span> | Source: Public Domain</p>
+                    </div>
+                    <div class="mt-2 md:mt-0 flex space-x-2">
+                        <button class="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center">
+                            <i class="fas fa-crown mr-2"></i> Upgrade to Pro
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- AI Model Overview (Enhanced with Company Information) -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="md:w-1/4 flex flex-col items-center">
+                            <div class="w-24 h-24 bg-gray-200 rounded-full mb-4 overflow-hidden">
+                                <img src="https://i.pinimg.com/736x/7b/78/e9/7b78e99546e7ad98a3e20a4d52eeb979.jpg" alt="Claude AI Logo" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="text-xl font-bold text-center">Claude AI</h4>
+                            <p class="text-gray-600 text-center">www.anthropic.com</p>
+                            <div class="mt-4 star-rating flex">
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star-half-alt text-yellow-400 star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">4.5/5 rating</span>
+                        </div>
+                        <div class="md:w-3/4">
+                            <h4 class="text-xl font-bold mb-4">Company Information</h4>
+                            <div class="company-info-box">
+                                <p class="text-gray-700"><strong>Provider:</strong> Anthropic</p>
+                                <p class="text-gray-700"><strong>Founded:</strong> 2021</p>
+                                <p class="text-gray-700"><strong>Headquarters:</strong> San Francisco, CA, USA</p>
+                                <p class="text-gray-700"><strong>Mission:</strong> Advancing safe, interpretable, and value-aligned AI systems for global impact.</p>
+                            </div>
+                            <h4 class="text-xl font-bold mb-4">Automated Summary</h4>
+                            <p class="text-gray-700 mb-4">Claude AI, developed by Anthropic, is a leading conversational AI model designed for safety, interpretability, and enterprise-grade performance. It excels in use cases like customer support (e.g., resolving 50% of support tickets instantly at Stampli), content generation (e.g., technical documentation), and code assistance (e.g., debugging Python scripts). Its constitutional AI framework reduces harmful outputs by 70% compared to industry standards, making it ideal for regulated industries like finance and healthcare. With a 200K token context window and multimodal capabilities (text and image processing), Claude competes with GPT-4/4o, Gemini 1.5, LLaMA 3, and Grok 3, offering robust integration and cost efficiency.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-bold mb-2">Core Capabilities</h5>
+                                    <p class="text-gray-600 text-sm">Text/image processing, 200K context, code generation</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-bold mb-2">Safety Metrics</h5>
+                                    <p class="text-gray-600 text-sm">70% less toxic output, HIPAA-compliant</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-bold mb-2">Performance</h5>
+                                    <p class="text-gray-600 text-sm">MMLU: 86.8%, GSM8K: 92.5%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blurred Content (Remaining 70%) -->
+        <div class="blur-container">
+            <div class="blurred-content">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- AI Solution Considerations -->
+                    <div class="p-6 border-b border-gray-200 report-section">
+                        <h4 class="text-xl font-bold mb-6">AI Solution Considerations</h4>
+                        <div class="space-y-6">
+                            <!-- Functionality -->
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="md:w-1/4">
+                                    <h5 class="font-bold">Functionality</h5>
+                                    <div class="mt-2 flex items-center">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-gray-800 h-2.5 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                        <span class="ml-2 text-sm font-medium">9.0/10</span>
+                                    </div>
+                                </div>
+                                <div class="md:w-3/4">
+                                    <p class="text-gray-700">Claude supports a wide range of enterprise use cases, including customer support (e.g., 24/7 chatbots reducing ticket volume), content creation (e.g., API documentation), and coding (e.g., LeetCode problem-solving). Its 200K token context window enables processing of large datasets, such as analyzing sales transcripts or legal contracts. Sub-features include sentiment analysis (8.8/10), code generation (9.2/10), and document summarization (9.0/10). Limitations include lack of image generation and audio processing.</p>
+                                    <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                        <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Other considerations omitted for brevity -->
+                        </div>
+                    </div>
+                    
+                    <!-- Remaining sections (Company/Vendor Considerations, Comparative Benchmarking, etc.) -->
+                    <div class="p-6 border-b border-gray-200 report-section">
+                        <h4 class="text-xl font-bold mb-6">Company/Vendor Considerations</h4>
+                        <!-- Content continues as in original, but blurred -->
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="bg-black text-white py-12">
+                    <div class="container mx-auto px-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div>
+                                <h3 class="text-xl font-bold mb-4">OCEAN-A</h3>
+                                <p class="text-gray-400">Automated company assessments powered by AI and public domain data.</p>
+                            </div>
+                            <!-- Footer content continues, but blurred -->
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            
+            <!-- Overlay with Lock and Button (Not Blurred) -->
+            <div class="overlay">
+                <i class="fas fa-lock"></i>
+                <h3>Sign Up to Get Full Access</h3>
+                <button class="read-more" onclick="window.location='AssesmentDemo.html'">Read More</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="fixed bottom-6 right-6">
+        <button class="w-14 h-14 bg-black text-white rounded-full shadow-lg hover:bg-gray-800 transition flex items-center justify-center floating">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Animation for report sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportSections = document.querySelectorAll('.report-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            reportSections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.6s ease';
+                observer.observe(section);
+            });
+            
+            // Read More button action
+            const readMoreButton = document.querySelector('.read-more');
+            readMoreButton.addEventListener('click', function() {
+                alert('Please sign up to access the full report!');
+                // Optionally redirect to a signup page
+                // window.location.href = '/signup';
+            });
+        });
+    </script>
+</body>
+</html>

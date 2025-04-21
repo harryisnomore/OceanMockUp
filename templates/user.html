@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Solutions Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8f8f8;
+            --accent-bg: #e5e5e5;
+            --primary-text: #222222;
+            --secondary-text: #555555;
+            --accent-color: #121212;
+            --hover-color: #f0f0f0;
+            --border-color: #e0e0e0;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --success: #2ecc71;
+            --primary: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-bg);
+            color: var(--primary-text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            font-weight: bold;
+            font-size: 20px;
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+        }
+
+        .profile {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .profile-role {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .welcome-section p {
+            color: var(--secondary-text);
+        }
+
+        .search-bar {
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            margin-left: 10px;
+            flex: 1;
+            outline: none;
+            color: var(--primary-text);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quick-action {
+            background-color: var(--primary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .quick-action:hover {
+            transform: translateY(-5px);
+        }
+
+        .quick-action i {
+            margin-bottom: 8px;
+            color: var(--accent-color);
+        }
+
+        .quick-action-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .see-all {
+            font-size: 14px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .card {
+            background-color: var(--primary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .solution-card {
+            background-color: var(--primary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .solution-image {
+            height: 140px;
+            background-color: var(--accent-bg);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .solution-image i {
+            font-size: 36px;
+            color: var(--accent-color);
+        }
+
+        .solution-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .solution-content {
+            padding: 15px;
+        }
+
+        .solution-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .solution-description {
+            font-size: 13px;
+            color: var(--secondary-text);
+            margin-bottom: 10px;
+        }
+
+        .solution-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--secondary-text);
+        }
+
+        .solution-usage {
+            display: flex;
+            align-items: center;
+        }
+
+        .solution-usage i {
+            margin-right: 4px;
+            width: 14px;
+            height: 14px;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .report-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--accent-bg);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .report-info {
+            flex: 1;
+        }
+
+        .report-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .report-date {
+            font-size: 12px;
+            color: var(--secondary-text);
+        }
+
+        .recommendation-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: var(--accent-bg);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recommendation-info {
+            flex: 1;
+        }
+
+        .recommendation-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .recommendation-description {
+            font-size: 12px;
+            color: var(--secondary-text);
+            margin-bottom: 8px;
+        }
+
+        .recommendation-action {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 10px;
+        }
+
+        .comparison-item {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .comparison-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--accent-bg);
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comparison-title {
+            font-weight: 600;
+        }
+
+        .comparison-vs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--secondary-text);
+            font-weight: 300;
+        }
+
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-name {
+            font-size: 14px;
+        }
+
+        .feature-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .usage-chart-container {
+            height: 250px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .notification-icon {
+            position: relative;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e53e3e;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+            
+            .nav-item span, .logo span, .profile-info {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+            
+            .solutions-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i data-feather="zap"></i>
+            <span>Ocean Hub</span>
+        </div>
+        <div class="nav-item active">
+            <i data-feather="home"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+            <i data-feather="package"></i>
+            <span>My Solutions</span>
+        </div>
+        <div class="nav-item">
+            <i data-feather="file-text"></i>
+            <span>Reports</span>
+        </div>
+        <div class="nav-item">
+            <i data-feather="trending-up"></i>
+            <span>Analytics</span>
+        </div>
+        <div class="nav-item">
+            <i data-feather="shopping-cart"></i>
+            <span onclick="window.location.href='gate.html'">Marketplace</span>
+        </div>
+        <div class="nav-item">
+            <i data-feather="git-branch"></i>
+            <span>Comparisons</span>
+        </div>
+        <div class="nav-item">
+            <i data-feather="settings"></i>
+            <span>Settings</span>
+        </div>
+        <div class="profile">
+            <div class="profile-avatar">
+                <span>JD</span>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name">Jane Doe</div>
+                <div class="profile-role">Enterprise</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="welcome-section">
+                <h1>Welcome back, Jane</h1>
+                <p>Here's what's happening with your AI solutions today.</p>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <div class="notification-icon">
+                    <i data-feather="bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+                <div class="search-bar">
+                    <i data-feather="search" style="color: var(--secondary-text);"></i>
+                    <input type="text" placeholder="Search for solutions...">
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="quick-action">
+                <i data-feather="plus-circle"></i>
+                <span class="quick-action-title" onclick="window.location.href='gate.html'">Add Solution</span>
+            </div>
+            <div class="quick-action">
+                <i data-feather="bar-chart-2"></i>
+                <span class="quick-action-title" onclick="window.location.href='Assesment.html'">New Report</span>
+
+            </div>
+            <div class="quick-action">
+                <i data-feather="git-merge"></i>
+                <span class="quick-action-title" onclick="window.location.href='solutioncomparision.html'">Compare</span>
+            </div>
+            <div class="quick-action">
+                <i data-feather="help-circle"></i>
+                <span class="quick-action-title">Support</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">
+                <span>Your AI Solutions</span>
+                <a href="#" class="see-all">See all</a>
+            </div>
+            <div class="solutions-grid" id="solutions-grid">
+                <!-- Solutions will be populated via JavaScript -->
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="card">
+                <div class="section-title">
+                    <span>Solution Usage Analytics</span>
+                    <div>
+                        <select id="timeRangeSelector" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border-color);">
+                            <option value="6m">Last 30 days</option>
+                            <option value="3m">Last 7 days</option>
+                            <option value="1m">Last 24 hours</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="usage-chart-container">
+                    <canvas id="usageChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="section-title">
+                    <span>Recommended Solutions</span>
+                </div>
+                <div id="recommendations">
+                    <!-- Recommendations will be populated via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="card">
+                <div class="section-title">
+                    <span>Saved Reports</span>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                <div id="reports">
+                    <!-- Reports will be populated via JavaScript -->
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="section-title">
+                    <span>Solution Comparison</span>
+                </div>
+                <div class="comparison-container">
+                    <div class="comparison-item">
+                        <div class="comparison-header">
+                            <div class="comparison-icon">
+                                <i data-feather="cpu"></i>
+                            </div>
+                            <div class="comparison-title">NLP Pro</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Accuracy</div>
+                            <div class="feature-value">94%</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Speed</div>
+                            <div class="feature-value">125ms</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Languages</div>
+                            <div class="feature-value">12</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Price</div>
+                            <div class="feature-value">$89/mo</div>
+                        </div>
+                    </div>
+                    <div class="comparison-vs">VS</div>
+                    <div class="comparison-item">
+                        <div class="comparison-header">
+                            <div class="comparison-icon">
+                                <i data-feather="activity"></i>
+                            </div>
+                            <div class="comparison-title">AI Writer</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Accuracy</div>
+                            <div class="feature-value">92%</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Speed</div>
+                            <div class="feature-value">80ms</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Languages</div>
+                            <div class="feature-value">8</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-name">Price</div>
+                            <div class="feature-value">$59/mo</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn btn-outline">Full Comparison</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        // Sample data for AI solutions
+        const solutions = [
+            { 
+                name: 'NLP Pro', 
+                description: 'Advanced natural language processing for content analysis and generation', 
+                icon: 'cpu', 
+                usage: '78%', 
+                lastUsed: '2h ago',
+                enterprise: true 
+            },
+            { 
+                name: 'AI Writer', 
+                description: 'Automated content creation with advanced language models', 
+                icon: 'edit-3', 
+                usage: '45%', 
+                lastUsed: '1d ago',
+                enterprise: false 
+            },
+            { 
+                name: 'Vision API', 
+                description: 'Image recognition and processing solution for your applications', 
+                icon: 'eye', 
+                usage: '92%', 
+                lastUsed: '5h ago',
+                enterprise: true 
+            },
+            { 
+                name: 'Voice Assistant', 
+                description: 'Speech recognition and synthesis for customer service', 
+                icon: 'mic', 
+                usage: '33%', 
+                lastUsed: '3d ago',
+                enterprise: false 
+            }
+        ];
+
+        // Sample recommendations
+        const recommendations = [
+            {
+                name: 'Sentiment Analysis',
+                description: 'Based on your use of NLP Pro',
+                icon: 'bar-chart'
+            },
+            {
+                name: 'Data Visualization',
+                description: 'Complements your Vision API usage',
+                icon: 'pie-chart'
+            },
+            {
+                name: 'Chatbot Builder',
+                description: 'Similar users also purchased this',
+                icon: 'message-square'
+            }
+        ];
+
+        // Sample reports
+        const reports = [
+            {
+                name: 'Claude AI Performance Report',
+                date: 'April 18, 2025',
+                icon: 'bar-chart-2'
+            },
+            {
+                name: 'NLP Usage Analysis',
+                date: 'April 5, 2025',
+                icon: 'trending-up'
+            },
+            {
+                name: 'Voice Assistant Metrics',
+                date: 'March 28, 2025',
+                icon: 'mic'
+            },
+            {
+                name: 'Vision API ROI Report',
+                date: 'March 15, 2025',
+                icon: 'dollar-sign'
+            }
+        ];
+
+        // Usage data for chart
+        const usageData = {
+            labels: ['Jan 15', 'Jan 20', 'Jan 25', 'Jan 30', 'Feb 5', 'Feb 10', 'Feb 15'],
+            datasets: [
+                {
+                    label: 'NLP Pro',
+                    data: [120, 150, 180, 170, 160, 190, 210],
+                    borderColor: '#121212',
+                    backgroundColor: 'rgba(18, 18, 18, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Vision API',
+                    data: [80, 100, 90, 110, 130, 140, 135],
+                    borderColor: '#666666',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    borderDash: [5, 5]
+                },
+                {
+                    label: 'AI Writer',
+                    data: [40, 60, 50, 70, 65, 80, 95],
+                    borderColor: '#aaaaaa',
+                    backgroundColor: 'transparent',
+                    tension: 0.4
+                }
+            ]
+        };
+
+        // Populate solutions grid
+        const solutionsGrid = document.getElementById('solutions-grid');
+        solutions.forEach(solution => {
+            const card = document.createElement('div');
+            card.className = 'solution-card';
+            card.innerHTML = `
+                <div class="solution-image">
+                    <i data-feather="${solution.icon}"></i>
+                    ${solution.enterprise ? '<div class="solution-badge">Enterprise</div>' : ''}
+                </div>
+                <div class="solution-content">
+                    <div class="solution-title">${solution.name}</div>
+                    <div class="solution-description">${solution.description}</div>
+                    <div class="solution-stats">
+                        <div class="solution-usage">
+                            <i data-feather="activity"></i>
+                            <span>Usage: ${solution.usage}</span>
+                        </div>
+                        <div>Last used: ${solution.lastUsed}</div>
+                    </div>
+                </div>
+            `;
+            solutionsGrid.appendChild(card);
+        });
+
+        // Populate recommendations
+        const recommendationsContainer = document.getElementById('recommendations');
+        recommendations.forEach(recommendation => {
+            const item = document.createElement('div');
+            item.className = 'recommendation-item';
+            item.innerHTML = `
+                <div class="recommendation-image">
+                    <i data-feather="${recommendation.icon}"></i>
+                </div>
+                <div class="recommendation-info">
+                    <div class="recommendation-title">${recommendation.name}</div>
+                    <div class="recommendation-description">${recommendation.description}</div>
+                    <div class="recommendation-action">View details</div>
+                </div>
+            `;
+            recommendationsContainer.appendChild(item);
+        });
+
+        // Populate reports
+        const reportsContainer = document.getElementById('reports');
+        reports.forEach(report => {
+            const item = document.createElement('div');
+            item.className = 'report-item';
+            item.innerHTML = `
+                <div class="report-icon">
+                    <i data-feather="${report.icon}"></i>
+                </div>
+                <div class="report-info">
+                    <div class="report-title">${report.name}</div>
+                    <div class="report-date">${report.date}</div>
+                </div>
+            `;
+            reportsContainer.appendChild(item);
+        });
+
+        // Initialize Usage Chart
+        const usageCtx = document.getElementById('usageChart').getContext('2d');
+        const usageChart = new Chart(usageCtx, {
+            type: 'line',
+            data: usageData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+
+        // Reinitialize Feather icons for dynamically added content
+        feather.replace();
+
+        // Handle time range selector
+        document.getElementById('timeRangeSelector').addEventListener('change', function(e) {
+            // In a real app, this would fetch new data based on the selected time range
+            alert(`Data would be updated for: ${e.target.value}`);
+        });
+    </script>
+</body>
+</html>

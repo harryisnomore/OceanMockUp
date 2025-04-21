@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- *** CHANGE TITLE FOR EACH PRODUCT *** -->
+    <title>Product Detail - [Product Name] - Ocean GATE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- *** Ensure this path is correct *** -->
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+ /* ==========================================================================
+   1. Root Variables & Theme Setup
+   ========================================================================== */
+
+:root {
+    /* Light Mode Defaults */
+    --primary: #000000;        /* Black */
+    --secondary: #ffffff;      /* White */
+    --accent: #888888;         /* Gray */
+    --hover: #333333;          /* Dark Gray */
+    --card-bg: #ffffff;
+    --text: #000000;
+    --background: #f8f8f8;
+    --border: #e0e0e0;
+
+    /* UI Colors */
+    --success: #28a745;        /* Green for checkmarks etc. */
+}
+
+body.dark-mode {
+    /* Dark Mode Overrides */
+    --primary: #ffffff;        /* White */
+    --secondary: #121212;      /* Very Dark Gray */
+    --accent: #666666;         /* Darker Gray */
+    --hover: #e0e0e0;          /* Light Gray */
+    --card-bg: #1e1e1e;
+    --text: #ffffff;
+    --background: #121212;
+    --border: #333333;
+
+    /* UI Colors - Dark Mode */
+    --success: #34c759;        /* Brighter green for dark background */
+}
+
+/* ==========================================================================
+   2. Base & Typography Styles
+   ========================================================================== */
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;       /* Prevent horizontal scroll */
+    font-size: 16px;          /* Set base font size */
+    line-height: 1.6;         /* Improve readability */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 0;            /* Remove default top margin */
+    margin-bottom: 0.75rem;   /* Consistent bottom margin */
+    color: var(--primary);    /* Headings use primary color */
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;      /* Default paragraph spacing */
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;    /* Remove default underline */
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent);
+}
+
+/* Specific Dark Mode Text Color (If needed, clarify usage of .ba) */
+.dark-mode .ba {
+    color: white;
+}
+
+/* ==========================================================================
+   3. Layout & Navigation
+   ========================================================================== */
+
+/* --- Navbar --- */
+.navbar {
+    border-bottom: 1px solid var(--border);
+    background-color: var(--card-bg);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* --- General Content Section --- */
+.content-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+/* --- Breadcrumbs --- */
+.breadcrumbs {
+    padding: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumbs a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    color: var(--primary);
+}
+
+.breadcrumbs span {
+    color: var(--text);
+    margin-left: 0.25rem;
+}
+
+.breadcrumbs span::before {
+    content: "/";
+    margin-right: 0.25rem;
+    color: var(--accent);
+}
+
+/* --- Footer --- */
+.footer {
+    background-color: var(--card-bg);
+    padding: 3rem 0;
+    text-align: center;
+    margin-top: 5rem;
+    border-top: 1px solid var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer a {
+    color: var(--text);
+    margin: 0 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.footer a:hover {
+    color: var(--accent);
+}
+
+.footer .social-icons a {
+    font-size: 1.2rem;
+}
+
+/* ==========================================================================
+   4. Product Detail Page Specific Styles
+   ========================================================================== */
+
+/* --- Product Hero Section --- */
+.product-detail-hero {
+    padding: 4rem 0;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.product-image {
+    display: block;               /* Prevent extra space below image */
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.dark-mode .product-image {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.product-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;             /* Tighter line height for large titles */
+}
+
+/* --- Product Tags --- */
+.product-tags .badge {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5em 1em;           /* Slightly larger padding */
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+/* Dark Mode Badge Adjustments */
+.dark-mode .badge.bg-primary {
+    background-color: #444 !important;   /* Using specific values for override */
+    color: #fff !important;
+    border: 1px solid #666;
+}
+
+.dark-mode .badge.bg-secondary {
+    background-color: #555 !important;
+    color: #fff !important;
+    border: 1px solid #777;
+}
+
+.dark-mode .badge.bg-info {
+    background-color: #0a58ca !important; /* Example dark info */
+    color: #fff !important;
+    border: 1px solid #0a58ca;
+}
+
+/* --- Section Headings --- */
+.section-heading {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-bottom: 3px solid var(--primary); /* Slightly thicker border */
+    padding-bottom: 0.5rem;
+    display: inline-block;                   /* Ensure border only spans text width */
+}
+
+/* --- Feature List --- */
+.feature-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1.5rem;                      /* Space above list */
+}
+
+.feature-list li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;                 /* Align icon top with text */
+}
+
+.feature-list li i.fas {
+    color: var(--primary);
+    margin-right: 0.75rem;
+    margin-top: 0.2rem;                      /* Fine-tune vertical alignment */
+    width: 20px;                            /* Fixed width for consistent alignment */
+    text-align: center;
+    flex-shrink: 0;                         /* Prevent icon from shrinking */
+    transition: color 0.3s ease;
+}
+
+.dark-mode .feature-list li i.fas {
+    color: #eee;                            /* Lighter icon color for dark mode */
+}
+
+/* --- Pricing Cards --- */
+.pricing-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;                           /* For equal height columns in flex/grid */
+    display: flex;                         /* Use flex for better internal alignment */
+    flex-direction: column;
+}
+
+.dark-mode .pricing-card {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode .pricing-card:hover {
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+.pricing-card h4 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-size: 1.25rem;
+}
+
+.pricing-card .price {
+    font-size: 2.25rem;                   /* Slightly larger price */
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.pricing-card .price span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--accent);
+    margin-left: 0.25rem;
+}
+
+.pricing-card ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;                        /* Allow list to take up space before button */
+}
+
+.pricing-card ul li {
+    margin-bottom: 0.6rem;              /* Slightly more spacing */
+    color: var(--text);
+    display: flex;
+    align-items: center;
+}
+
+.pricing-card ul li i.fas {
+    color: var(--success);              /* Use variable for check color */
+    margin-right: 0.6rem;
+    font-size: 0.9em;                   /* Slightly smaller check */
+}
+
+/* --- Call to Action Buttons --- */
+.btn-cta {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    text-transform: uppercase;          /* Optional: Uppercase CTA */
+    letter-spacing: 0.05em;             /* Optional: Spacing */
+    transition: all 0.2s ease;
+}
+
+.btn-dark.btn-cta {
+    background-color: var(--primary);
+    color: var(--secondary);
+    border-color: var(--primary);
+}
+
+.btn-dark.btn-cta:hover {
+    background-color: var(--hover);
+    border-color: var(--hover);
+    color: var(--text);                 /* Adjust hover text if needed */
+}
+
+.btn-outline-dark.btn-cta {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline-dark.btn-cta:hover {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <p>Ocean</p>
+            </a>
+            <div class="navbar-nav ms-auto d-flex flex-row align-items-center">
+                <a class="nav-link me-3" href="gate.html">GATE</a>
+                <div class="dropdown me-3">
+                    <button class="btn btn-login dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      Log In
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
+                      <li><a class="dropdown-item" href="login_user.html" data-role="user">User</a></li>
+                      <li><a class="dropdown-item" href="login_Partner.html" data-role="partner">Channel Partner</a></li>
+                      <li><a class="dropdown-item" href="login.html" data-role="admin">Admin</a></li>
+                    </ul>
+                  </div>
+                  <button onclick="toggleTheme()"
+                          class="btn btn-sm btn-outline-dark ms-2"
+                          id="themeToggle"
+                          data-theme="dark">
+                    🌙
+                  </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+         <div class="breadcrumbs">
+              <a href="gate.html"></a>
+         </div>
+    </div>
+
+    <div class="product-detail-hero">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <!-- *** CHANGE PRODUCT IMAGE *** -->
+                    <img src="https://i.pinimg.com/736x/b7/59/19/b759190d2f1eee55229ae0fb5b934f9a.jpg" alt="[Product Name]" class="product-image">
+                </div>
+                <div class="col-lg-6">
+                    <!-- *** CHANGE PRODUCT NAME *** -->
+                    <h1 class="product-title">AI Data Analytics</h1>
+                    <!-- *** CHANGE PRODUCT SHORT DESCRIPTION *** -->
+                    <p class="lead mb-4">AI Data Analytics is an advanced, AI-powered data extraction and question-answering system that turns unstructured content from the web into structured, searchable knowledge. By combining intelligent web crawling, document parsing, semantic search, and large language models, it enables users to instantly query and derive insights from websites, PDFs, images, and other digital content.</p>
+                    <div class="product-tags mb-4">
+                        <!-- *** ADD PRODUCT TAGS/BADGES *** -->
+                        <span class="badge bg-primary">Tag 1</span>
+                        <span class="badge bg-secondary">Tag 2</span>
+                    </div>
+                    <!-- *** ADD CALL TO ACTION BUTTONS *** -->
+                    <a href="#pricing" class="btn btn-dark btn-cta me-2">View Pricing</a>
+                    <button class="btn btn-outline-dark btn-cta" onclick="requestDemo()">Request Demo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container content-section">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2 class="section-heading">Detailed Description</h2>
+                <!-- *** ADD DETAILED PRODUCT DESCRIPTION *** -->
+                <p>AI Data Analytics is an intelligent, end-to-end knowledge extraction and analysis system that autonomously crawls web pages, parses embedded documents (PDFs, images), processes the content using state-of-the-art natural language models, and enables semantic querying of information. Designed for scalability and reliability, it combines the power of LLMs, vector databases, and modern MLOps tooling to unlock deep insights from unstructured data sources.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                <h2 class="section-heading mt-5">Key Features</h2>
+                <!-- *** ADD KEY FEATURES *** -->
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Feature one description goes here. Highlight benefits.</li>
+                    <li><i class="fas fa-check-circle"></i> Feature two providing significant value.</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced capabilities for specific use cases.</li>
+                    <li><i class="fas fa-check-circle"></i> Easy integration with existing systems.</li>
+                    <li><i class="fas fa-check-circle"></i> Robust security and data privacy compliance.</li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <div class="pricing-card sticky-top" style="top: 2rem;">
+                    <h4>Provider Information</h4>
+                     <p>Provided by: <strong>Awesome AI Inc.</strong></p> <!-- Placeholder -->
+                     <p>Category: <strong>[Primary Category]</strong></p> <!-- Placeholder -->
+                     <hr>
+                    <h4>Quick Contact</h4>
+                    <p>Have questions? Contact the provider directly.</p>
+                    <button class="btn btn-dark w-100" onclick="contactProvider()">Contact Provider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pricing" class="container content-section bg-light py-5 rounded-3" style="background-color: var(--background) !important; border: 1px solid var(--border); margin-top: 2rem;">
+         <h2 class="section-heading text-center">Pricing Plans</h2>
+         <p class="text-center mb-5 lead" style="color: var(--accent);">Choose the plan that best fits your needs.</p>
+        <div class="row g-4 justify-content-center">
+            <!-- *** ADD/CUSTOMIZE PRICING CARDS BASED ON PRODUCT *** -->
+            <!-- Example Pricing Card 1 (Subscription) -->
+            <div class="col-lg-4 col-md-6">
+                <div class="pricing-card">
+                    <h4>Standard Plan</h4>
+                    <div class="price">$99 <span>/ month</span></div>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Core Feature A</li>
+                        <li><i class="fas fa-check"></i> Core Feature B</li>
+                        <li><i class="fas fa-check"></i> Basic Support</li>
+                        <li><i class="fas fa-times"></i> Advanced Feature X</li> <!-- Example of excluded feature -->
+                    </ul>
+                    <button class="btn btn-dark w-100 btn-cta">Get Started</button>
+                </div>
+            </div>
+            <!-- Example Pricing Card 2 (Usage-based) -->
+            <div class="col-lg-4 col-md-6">
+                 <div class="pricing-card">
+                    <h4>Pro Plan</h4>
+                    <div class="price">$0.05 <span>/ API call</span></div>
+                    <ul>
+                        <li><i class="fas fa-check"></i> All Standard Features</li>
+                        <li><i class="fas fa-check"></i> Advanced Feature X</li>
+                        <li><i class="fas fa-check"></i> Priority Support</li>
+                        <li><i class="fas fa-check"></i> Higher Rate Limits</li>
+                    </ul>
+                    <button class="btn btn-dark w-100 btn-cta">Get Started</button>
+                </div>
+            </div>
+            <!-- Example Pricing Card 3 (Enterprise) -->
+            <div class="col-lg-4 col-md-6">
+                 <div class="pricing-card">
+                    <h4>Enterprise</h4>
+                    <div class="price">Custom <span></span></div>
+                     <p class="mb-3">Tailored solutions for large organizations.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> All Pro Features</li>
+                        <li><i class="fas fa-check"></i> Custom Integrations</li>
+                        <li><i class="fas fa-check"></i> Dedicated Account Manager</li>
+                        <li><i class="fas fa-check"></i> Volume Discounts</li>
+                    </ul>
+                    <button class="btn btn-outline-dark w-100 btn-cta" onclick="contactProvider()">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="mb-3">
+                <a href="#">About Us</a>
+                <a href="#" onclick="openContactUs()">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="social-icons mb-3">
+                <a href="#" class="mx-2"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="mx-2"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="mx-2"><i class="fab fa-github"></i></a>
+                <a href="#" class="mx-2"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="mt-2 mb-0">© 2025 Ocean. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme toggle functionality (same as gate.html)
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load theme preference on page load (same as gate.html)
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.getElementById('themeToggle');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '☀️';
+            } else {
+                themeToggle.innerHTML = '🌙';
+            }
+        };
+
+        // Placeholder functions for buttons
+        function requestDemo() {
+            alert('Demo request form would appear here.');
+        }
+
+        function contactProvider() {
+             alert('Contact form or provider details would appear here.');
+        }
+
+        function openContactUs() {
+            alert('General contact form would open here.');
+        }
+    </script>
+</body>
+</html>

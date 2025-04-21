@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean GATE - Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --accent: #888888;
+            --hover: #333333;
+            --card-bg: #ffffff;
+            --text: #000000;
+            --background: #f8f8f8;
+            --border: #e0e0e0;
+        }
+
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            --primary: #ffffff;
+            --secondary: #121212;
+            --accent: #666666;
+            --hover: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+            --background: #121212;
+            --border: #333333;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .dark-mode .ba {
+          color: white;
+        }
+
+        /* Hero Section */
+        .marketplace-hero {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--background) 100%);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .input-group {
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.input-group button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.input-group button:hover {
+    background-color: #333;
+}
+
+
+        .marketplace-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .marketplace-hero p {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--text);
+        }
+
+        .marketplace-hero .lead {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        /* Cards */
+        .service-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dark-mode .service-card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .service-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark-mode .badge.bg-light.text-dark {
+  background-color: #444 !important;
+  color: white !important;
+  border: 1px solid #666;
+}
+
+
+        .service-card .card-img-top {
+            height: 180px;
+            object-fit: cover;
+            width: 100%;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .service-card .card-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card .card-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .service-card .card-text {
+            color: var(--accent);
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--secondary);
+            padding: 0.35rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 50px;
+            z-index: 3;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 0.5em 0.8em;
+            font-weight: 500;
+            border-radius: 50px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .badge.bg-primary {
+            background-color: var(--primary) !important;
+            color: var(--secondary);
+        }
+
+        .badge.bg-secondary {
+            background-color: var(--accent) !important;
+            color: var(--secondary);
+        }
+
+        .badge.bg-light {
+            background-color: #f0f0f0 !important;
+            color: var(--text);
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .dark-mode .badge.bg-light {
+            background-color: #333333 !important;
+            color: var(--secondary);
+        }
+
+        .badge.bg-light:hover {
+            background-color: var(--accent) !important;
+            color: var(--secondary);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .dark-mode .filter-section {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-select, .form-control {
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid var(--border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus, .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.25);
+            border-color: var(--accent);
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* Section Titles */
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--card-bg);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 5rem;
+            border-top: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .footer a {
+            color: var(--text);
+            margin: 0 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: var(--accent);
+        }
+
+        /* Modal */
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .card-title {
+           color: white;
+        }
+
+
+        .dark-mode .modal-content {
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--hover);
+            color: var(--secondary);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .marketplace-hero h1 {
+                font-size: 3rem;
+            }
+            
+            .navbar-collapse {
+                background-color: var(--card-bg);
+                border-radius: 12px;
+                padding: 1rem;
+                margin-top: 1rem;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                border: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .marketplace-hero {
+                padding: 6rem 0;
+            }
+            
+            .marketplace-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .marketplace-hero .lead {
+                font-size: 1.25rem;
+            }
+
+            .filter-section {
+                padding: 1.5rem;
+            }
+
+            .service-card .card-img-top {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .marketplace-hero {
+                padding: 5rem 0;
+            }
+            
+            .marketplace-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .navbar-brand p {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .footer a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <p>Ocean</p>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html#features">Features</a>
+                <a class="nav-link" href="index.html#pricing">Pricing</a>
+                <a class="nav-link" href="gate.html">GATE</a>
+                <div class="dropdown ms-3">
+                    <button class="btn btn-login dropdown-toggle" type="button" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      Log In
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="loginDropdown">
+                      <li><a class="dropdown-item" href="login_user.html" data-role="user">User</a></li>
+                      <li><a class="dropdown-item" href="login_Partner.html" data-role="partner">Channel Partner</a></li>
+                      <li><a class="dropdown-item" href="login.html" data-role="admin">Admin</a></li>
+                    </ul>
+                  </div>
+                  <button onclick="toggleTheme()" 
+                  class="btn btn-sm btn-outline-dark ms-3" 
+                  id="themeToggle" 
+                  data-theme="dark">
+            🌙
+          </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="marketplace-hero">
+        <div class="container">
+            <h1>Ocean GATE</h1>
+            <p class="lead">Your gateway to premium AI solution providers and services</p>
+            <p>Browse our curated marketplace of vetted AI vendors and specialized services to find the perfect solution for your needs.</p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="filter-section">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="categoryFilter" class="form-label">Filter by Category</label>
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="nlp">Natural Language Processing</option>
+                            <option value="vision">Computer Vision</option>
+                            <option value="analytics">Data Analytics</option>
+                            <option value="automation">Automation</option>
+                            <option value="chatbots">Chatbots & Assistants</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="pricingFilter" class="form-label">Pricing Model</label>
+                        <select class="form-select" id="pricingFilter">
+                            <option value="">All Pricing Models</option>
+                            <option value="subscription">Subscription</option>
+                            <option value="usage">Usage-based</option>
+                            <option value="enterprise">Enterprise</option>
+                            <option value="freemium">Freemium</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="searchServices" class="form-label">Search Services</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchServices" placeholder="Search by name or keyword">
+                            <button class="btn btn-dark" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-label">Popular Tags</label>
+                    <div class="category-tags">
+                        <span class="badge bg-light text-dark" onclick="applyTagFilter('sentiment-analysis')">Sentiment Analysis</span>
+                        <span class="badge bg-light text-dark" onclick="applyTagFilter('image-recognition')">Image Recognition</span>
+                        <span class="badge bg-light text-dark" onclick="applyTagFilter('language-translation')">Language Translation</span>
+                        <span class="badge bg-light text-dark" onclick="applyTagFilter('predictive-analytics')">Predictive Analytics</span>
+                        <span class="badge bg-light text-dark" onclick="applyTagFilter('customer-service')">Customer Service</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="section-title">Featured Services</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            <div class="col">
+                <div class="card service-card h-100">
+                    <span class="featured-badge">Featured</span>
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="AI Data Analytics Platform">
+                    <div class="card-body">
+                        <h5 class="card-title">AI Data Analytics</h5>
+                        <p class="card-text">Transform your business data into actionable insights with our AI-powered analytics platform.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Data Analytics</span>
+                                <span class="badge bg-secondary">Predictive Models</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <span class="featured-badge">Featured</span>
+                    <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="NLP Solution Suite">
+                    <div class="card-body">
+                        <h5 class="card-title">NLP Solution Suite</h5>
+                        <p class="card-text">Advanced natural language processing tools for sentiment analysis, content generation, and more.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">NLP</span>
+                                <span class="badge bg-secondary">Content Analysis</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <span class="featured-badge">Featured</span>
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Enterprise AI Assistant">
+                    <div class="card-body">
+                        <h5 class="card-title">Enterprise AI Assistant</h5>
+                        <p class="card-text">Customizable AI assistant that integrates with your business workflows and knowledge base.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Chatbots</span>
+                                <span class="badge bg-secondary">Enterprise</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="section-title">All Services</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Predictive Maintenance">
+                    <div class="card-body">
+                        <h5 class="card-title">Predictive Maintenance</h5>
+                        <p class="card-text">AI solution for industrial equipment maintenance prediction and optimization.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Automation</span>
+                                <span class="badge bg-secondary">Industrial</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Language Translation Service">
+                    <div class="card-body">
+                        <h5 class="card-title">Language Translation Service</h5>
+                        <p class="card-text">Real-time translation for over 100 languages with context awareness.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">NLP</span>
+                                <span class="badge bg-secondary">Translation</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Customer Support Bot">
+                    <div class="card-body">
+                        <h5 class="card-title">Customer Support Bot</h5>
+                        <p class="card-text">24/7 automated customer support with natural language understanding.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Chatbots</span>
+                                <span class="badge bg-secondary">Customer Service</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Fraud Detection System">
+                    <div class="card-body">
+                        <h5 class="card-title">Fraud Detection System</h5>
+                        <p class="card-text">Advanced AI for real-time fraud detection in financial transactions.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Analytics</span>
+                                <span class="badge bg-secondary">Security</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Document Processing">
+                    <div class="card-body">
+                        <h5 class="card-title">Document Processing</h5>
+                        <p class="card-text">Automated document analysis, classification, and data extraction.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Automation</span>
+                                <span class="badge bg-secondary">OCR</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Market Intelligence">
+                    <div class="card-body">
+                        <h5 class="card-title">Market Intelligence</h5>
+                        <p class="card-text">AI-powered market analysis and competitive intelligence platform.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Analytics</span>
+                                <span class="badge bg-secondary">Business Intelligence</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Voice Assistant Development">
+                    <div class="card-body">
+                        <h5 class="card-title">Voice Assistant Development</h5>
+                        <p class="card-text">Custom voice assistant development for various devices and platforms.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">NLP</span>
+                                <span class="badge bg-secondary">Voice Technology</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card service-card h-100">
+                    <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Image Recognition API">
+                    <div class="card-body">
+                        <h5 class="card-title">Image Recognition API</h5>
+                        <p class="card-text">Powerful computer vision API for object detection and image classification.</p>
+                        <div class="mt-auto">
+                            <div class="mb-3">
+                                <span class="badge bg-primary">Computer Vision</span>
+                                <span class="badge bg-secondary">API</span>
+                            </div>
+                            <a href="#" class="btn btn-dark w-100">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5 py-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 text-center">
+                <div class="p-5 rounded-3" style="background-color: var(--card-bg); border: 1px solid var(--border);">
+                    <h3>List Your AI Service</h3>
+                    <p class="mb-4">Are you a provider of AI solutions? Join our marketplace to reach potential customers and grow your business.</p>
+                    <button class="btn btn-dark px-4" onclick="openProviderForm()">Become a Provider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="mb-3">
+                <a href="#">About Us</a>
+                <a href="#" onclick="openContactUs()">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="social-icons mb-3">
+                <a href="#" class="mx-2"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="mx-2"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="mx-2"><i class="fab fa-github"></i></a>
+                <a href="#" class="mx-2"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="mt-2 mb-0">© 2025 Ocean. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Provider Registration Modal -->
+    <div class="modal fade" id="providerModal" tabindex="-1" aria-labelledby="providerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="providerModalLabel">Register as a Provider</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="providerForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="companyName" class="form-label">Company Name *</label>
+                                <input type="text" class="form-control" id="companyName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contactEmail" class="form-label">Contact Email *</label>
+                                <input type="email" class="form-control" id="contactEmail" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="serviceDescription" class="form-label">Service Description *</label>
+                                <textarea class="form-control" id="serviceDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="serviceCategory" class="form-label">Primary Service Category *</label>
+                                <select class="form-select" id="serviceCategory" required>
+                                    <option value="">Select a category</option>
+                                    <option value="nlp">Natural Language Processing</option>
+                                    <option value="vision">Computer Vision</option>
+                                    <option value="analytics">Data Analytics</option>
+                                    <option value="automation">Automation</option>
+                                    <option value="chatbots">Chatbots & Assistants</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pricingModel" class="form-label">Pricing Model *</label>
+                                <select class="form-select" id="pricingModel" required>
+                                    <option value="">Select pricing model</option>
+                                    <option value="subscription">Subscription</option>
+                                    <option value="usage">Usage-based</option>
+                                    <option value="enterprise">Enterprise</option>
+                                    <option value="freemium">Freemium</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Service Tags</label>
+                                <div class="category-tags">
+                                    <span class="badge bg-light text-dark" onclick="toggleTag(this)">Sentiment Analysis</span>
+                                    <span class="badge bg-light text-dark" onclick="toggleTag(this)">Image Recognition</span>
+                                    <span class="badge bg-light text-dark" onclick="toggleTag(this)">Language Translation</span>
+                                    <span class="badge bg-light text-dark" onclick="toggleTag(this)">Predictive Analytics</span>
+                                    <span class="badge bg-light text-dark" onclick="toggleTag(this)">Customer Service</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-dark px-4">Submit Application</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  
+  // Update emoji based on current theme
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  
+  // Save theme preference
+  localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+// Load theme preference on page load
+window.onload = () => {
+  const savedTheme = localStorage.getItem('theme');
+  const themeToggle = document.getElementById('themeToggle');
+  
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.innerHTML = '☀️';
+  } else {
+    themeToggle.innerHTML = '🌙';
+  }
+  
+  document.getElementById('chatbot-icon').style.display = 'none';
+};
+
+        // Tag filter functionality
+        function applyTagFilter(tag) {
+            // In a real implementation, this would filter the services based on tag
+            console.log(`Filtering by tag: ${tag}`);
+            // You would add your filtering logic here
+            alert(`Filtering for services with tag: ${tag}`);
+        }
+
+        // Toggle tag selection in provider form
+        function toggleTag(element) {
+            element.classList.toggle('bg-primary');
+            element.classList.toggle('text-white');
+        }
+
+        // Open provider registration modal
+        function openProviderForm() {
+            const providerModal = new bootstrap.Modal(document.getElementById('providerModal'));
+            providerModal.show();
+        }
+
+        // Handle provider form submission
+        document.getElementById('providerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const companyName = document.getElementById('companyName').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            const serviceDescription = document.getElementById('serviceDescription').value;
+            const serviceCategory = document.getElementById('serviceCategory').value;
+            const pricingModel = document.getElementById('pricingModel').value;
+
+            // In a real implementation, you would send this data to the server
+            console.log({
+                companyName,
+                contactEmail,
+                serviceDescription,
+                serviceCategory,
+                pricingModel
+            });
+
+            alert('Thank you for your application! We will review it and get back to you soon.');
+            
+            const providerModal = bootstrap.Modal.getInstance(document.getElementById('providerModal'));
+            providerModal.hide();
+        });
+
+        // Search and filter functionality (for demonstration)
+        document.getElementById('searchServices').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            // In a real implementation, this would filter the displayed services
+            console.log(`Searching for: ${searchTerm}`);
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', function() {
+            const category = this.value;
+            // In a real implementation, this would filter the displayed services
+            console.log(`Filtering by category: ${category}`);
+        });
+
+        document.getElementById('pricingFilter').addEventListener('change', function() {
+            const pricing = this.value;
+            // In a real implementati this would filter the displayed services
+            console.log(`Filtering by pricing model: ${pricing}`);
+        });
+
+        // Open contact us modal
+        function openContactUs() {
+            alert('Contact form would open here in a real implementation.');
+        }
+    </script>
+</body>
+</html>

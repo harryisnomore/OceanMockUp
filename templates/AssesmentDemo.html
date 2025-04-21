@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCEAN-A | Automated Assessment Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .card-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #000000, #4b5563);
+        }
+        .report-section {
+            transition: all 0.3s ease;
+        }
+        .report-section:hover {
+            transform: scale(1.02);
+        }
+        .star-rating .star {
+            transition: all 0.2s ease;
+        }
+        .star-rating:hover .star {
+            transform: scale(1.1);
+        }
+        .card-3d {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-3d:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .report-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        canvas {
+            max-width: 100%;
+            height: 300px !important;
+        }
+        .company-info-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans antialiased">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-xl">A</span>
+                </div>
+                <h1 class="text-2xl font-bold gradient-text">OCEAN-A</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="font-medium hover:text-gray-600 transition">Home</a>
+                <a href="index.html#Pricing" class="font-medium hover:text-gray-600 transition">Pricing</a>
+            </nav>
+            <button class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Search Section -->
+        <section class="mb-12 text-center">
+            <h2 class="text-4xl font-bold mb-6">Automated Company Assessment</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-8">Enter a company name, URL, or product category to generate an instant OCEAN-A report based on publicly available information.</p>
+            
+            <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6 card-3d">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" placeholder="Enter company name, URL or product..." class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    <button class="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition flex items-center justify-center">
+                        <i class="fas fa-search mr-2"></i> Generate Report
+                    </button>
+                </div>
+                <div class="mt-4 flex flex-wrap justify-center gap-2">
+                    <span class="text-sm text-gray-500">Try:</span>
+                    <button class="text-sm text-gray-700 hover:text-black hover:underline">www.tern-group.com</button>
+                    <button class="text-sm text-gray-700 hover:text-black hover:underline">Amazon Web Services</button>
+                    <button class="text-sm text-gray-700 hover:text-black hover:underline">Project Management Tools</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Display Section -->
+        <section class="mb-12">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <!-- Report Header -->
+                <div class="bg-gray-100 px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold">Claude AI Assessment Report</h3>
+                        <p class="text-gray-600">Generated: <span class="font-medium">April 18, 2025</span> | Source: Public Domain</p>
+                    </div>
+                    <div class="mt-2 md:mt-0 flex space-x-2">
+                        <button class="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition flex items-center" onclick="window.location='index.html#pricing'">
+                            <i class="fas fa-crown mr-2"></i> Upgrade to Pro
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- AI Model Overview -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="md:w-1/4 flex flex-col items-center">
+                            <div class="w-24 h-24 bg-gray-200 rounded-full mb-4 overflow-hidden">
+                                <img src="https://i.pinimg.com/736x/7b/78/e9/7b78e99546e7ad98a3e20a4d52eeb979.jpg" alt="Claude AI Logo" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="text-xl font-bold text-center">Claude AI</h4>
+                            <p class="text-gray-600 text-center">www.anthropic.com</p>
+                            <div class="mt-4 star-rating flex">
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star text-yellow-400 star"></i>
+                                <i class="fas fa-star-half-alt text-yellow-400 star"></i>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">4.5/5 rating</span>
+                        </div>
+                        <div class="md:w-3/4">
+                            <h4 class="text-xl font-bold mb-4">Company Information</h4>
+                            <div class="company-info-box">
+                                <p class="text-gray-700"><strong>Provider:</strong> Anthropic</p>
+                                <p class="text-gray-700"><strong>Founded:</strong> 2021</p>
+                                <p class="text-gray-700"><strong>Headquarters:</strong> San Francisco, CA, USA</p>
+                                <p class="text-gray-700"><strong>Mission:</strong> Advancing safe, interpretable, and value-aligned AI systems for global impact.</p>
+                            </div>
+                            <h4 class="text-xl font-bold mb-4">Automated Summary</h4>
+                            <p class="text-gray-700 mb-4">Claude AI, developed by Anthropic, is a leading conversational AI model designed for safety, interpretability, and enterprise-grade performance. It excels in use cases like customer support (e.g., resolving 50% of support tickets instantly at Stampli), content generation (e.g., technical documentation), and code assistance (e.g., debugging Python scripts). Its constitutional AI framework reduces harmful outputs by 70% compared to industry standards, making it ideal for regulated industries like finance and healthcare. With a 200K token context window and multimodal capabilities (text and image processing), Claude competes with GPT-4/4o, Gemini 1.5, LLaMA 3, and Grok 3, offering robust integration and cost efficiency.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-bold mb-2">Core Capabilities</h5>
+                                    <p class="text-gray-600 text-sm">Text/image processing, 200K context, code generation</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-bold mb-2">Safety Metrics</h5>
+                                    <p class="text-gray-600 text-sm">70% less toxic output, HIPAA-compliant</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-bold mb-2">Performance</h5>
+                                    <p class="text-gray-600 text-sm">MMLU: 86.8%, GSM8K: 92.5%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Solution Considerations -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <h4 class="text-xl font-bold mb-6">AI Solution Considerations</h4>
+                    <div class="space-y-6">
+                        <!-- Functionality -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Functionality</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">9.0/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                <p class="text-gray-700">Claude supports a wide range of enterprise use cases, including customer support (e.g., 24/7 chatbots reducing ticket volume), content creation (e.g., API documentation), and coding (e.g., LeetCode problem-solving). Its 200K token context window enables processing of large datasets, such as analyzing sales transcripts or legal contracts. Sub-features include sentiment analysis (8.8/10), code generation (9.2/10), and document summarization (9.0/10). Limitations include lack of image generation and audio processing.</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Security -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Security</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 87%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">8.7/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                Claude employs industry-standard encryption (TLS 1.2/1.3) and access controls, with a 90-day data retention policy and no training on user data without consent. It is HIPAA-compliant, suitable for healthcare applications. However, lack of full transparency on human monitoring of prompts slightly lowers the score. Sub-metrics include data privacy (9.0/10), compliance (8.8/10), and vulnerability management (8.3/10, due to potential phishing risks).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Integration -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Integration</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">8.5/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                <p class="text-gray-700">Claude integrates with CRMs, ERPs, and platforms like Tableau and Excel via its API, enabling workflows like automated reporting and data visualization. Claude Enterprise offers custom training and a 500K context window for deeper integration. Limitations include fewer pre-built connectors compared to ChatGPT. Sub-metrics include API flexibility (8.8/10), platform compatibility (8.5/10), and ease of setup (8.2/10).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Metrics -->
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <h5 class="font-bold mb-4">Claude AI Performance Metrics</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <!-- Performance Radar Chart -->
+                                    <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+                                        <h6 class="font-bold mb-2">Claude AI Performance Radar</h6>
+                                        <canvas id="performanceRadarChart"></canvas>
+                                    </div>
+                        
+                                    <!-- Comparative Radar Chart (for Claude AI's internal dynamics) -->
+                                    <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+                                        <h6 class="font-bold mb-2">Claude AI: Dynamic Metrics Comparison</h6>
+                                        <canvas id="radarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Total Cost of Ownership -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Total Cost of Ownership</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">8.8/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                <p class="text-gray-700">Claude’s pricing includes a free tier, Claude Pro ($20/month), and Enterprise plans ($15/$75 per million input/output tokens). Implementation costs are low due to API simplicity, but ongoing fees scale with usage. Maintenance is minimal with cloud-based updates. Sub-metrics include initial cost (9.0/10), ongoing fees (8.5/10), and implementation ease (8.8/10).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Company/Vendor Considerations -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <h4 class="text-xl font-bold mb-6">Company/Vendor Considerations</h4>
+                    <div class="space-y-6">
+                        <!-- Financial Stability -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Financial Stability</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">8.5/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                <p class="text-gray-700">Anthropic, founded in 2021, has raised over $1.5B from investors like Amazon and Google, ensuring strong financial backing. With 4 years in business, it’s relatively young but growing rapidly. Sub-metrics include funding status (9.0/10), business longevity (8.0/10), and revenue growth (8.5/10, inferred from enterprise adoption).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Technical Expertise -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Technical Expertise</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">9.2/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                <p class="text-gray-700">Anthropic’s team, including ex-OpenAI researchers, has deep expertise in AI safety and NLP, with a track record in finance, healthcare, and tech. Claude’s constitutional AI framework is a pioneering innovation. Sub-metrics include industry experience (9.3/10), innovation (9.5/10), and deployment success (9.0/10).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Support Structure -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="md:w-1/4">
+                                <h5 class="font-bold">Support Structure</h5>
+                                <div class="mt-2 flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-gray-800 h-2.5 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium">8.0/10</span>
+                                </div>
+                            </div>
+                            <div class="md:w-3/4">
+                                <p class="text-gray-700">Anthropic offers dedicated support for Enterprise users, with 24/7 availability and global coverage. Community forums and documentation are robust, but free-tier support is limited. Sub-metrics include responsiveness (8.2/10), coverage (8.5/10), and onboarding (7.8/10).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Client Retention -->
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <h5 class="font-bold mb-4">Client Retention Rates</h5>
+                                <canvas id="retentionPieChart"></canvas>
+                            </div>
+                            <div>
+                                <p class="text-gray-700">Anthropic reports a 90% client retention rate, based on enterprise deployments in finance, retail, and healthcare. Testimonials from Stampli and Fable Food Co highlight satisfaction with ROI and support. Sub-metrics include retention rate (9.0/10), customer satisfaction (8.8/10), and testimonial quality (8.5/10).</p>
+                                <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                                    <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comparative Benchmarking -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <h4 class="text-xl font-bold mb-6">Comparative Benchmarking</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 items-stretch mb-2 min-h-[300px]">
+                        <!-- Chart Section -->
+                        <div class="w-full h-full flex flex-col justify-center">
+                            <canvas id="benchmarkBarChart"></canvas>
+                        </div>
+                        <div class="w-full h-full flex flex-col justify-center overflow-x-auto">
+                            <table class="w-full h-full bg-white border border-gray-200 text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="px-2 py-1 text-left font-medium text-gray-700 border-r border-gray-200">Model</th>
+                                        <th class="px-2 py-1 text-left font-medium text-gray-700 border-r border-gray-200">MMLU (%)</th>
+                                        <th class="px-2 py-1 text-left font-medium text-gray-700 border-r border-gray-200">GSM8K (%)</th>
+                                        <th class="px-2 py-1 text-left font-medium text-gray-700 border-r border-gray-200">DROP (%)</th>
+                                        <th class="px-2 py-1 text-left font-medium text-gray-700 border-r border-gray-200">Latency (s)</th>
+                                        <th class="px-2 py-1 text-left font-medium text-gray-700">Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-t border-gray-200">
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">Claude 3.7 Sonnet</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">86.8</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">92.5</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">83.4</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">1.1</td>
+                                        <td class="px-2 py-1 text-gray-600">200K</td>
+                                    </tr>
+                                    <tr class="border-t border-gray-200">
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">GPT-4/4o</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">88.7</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">94.0</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">85.2</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">1.3</td>
+                                        <td class="px-2 py-1 text-gray-600">128K</td>
+                                    </tr>
+                                    <tr class="border-t border-gray-200">
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">Gemini 1.5</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">85.9</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">91.0</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">82.7</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">1.2</td>
+                                        <td class="px-2 py-1 text-gray-600">1M</td>
+                                    </tr>
+                                    <tr class="border-t border-gray-200">
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">LLaMA 3</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">82.3</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">89.5</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">80.1</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">0.9</td>
+                                        <td class="px-2 py-1 text-gray-600">32K</td>
+                                    </tr>
+                                    <tr class="border-t border-gray-200">
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">Mixtral</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">83.5</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">90.2</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">81.5</td>
+                                        <td class="px-2 py-1 text-gray-600 border-r border-gray-200">1.0</td>
+                                        <td class="px-2 py-1 text-gray-600">64K</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">Claude outperforms the industry average in safety (9.5 vs. 7.5) and reasoning (9.2 vs. 8.0), but trails GPT-4/4o in multimodal capabilities (8.5 vs. 9.0). Its API latency (1.1s) is competitive, and cost efficiency ($15/M tokens) beats ChatGPT ($20/M tokens). Grok 3 shows promise but lacks Claude’s safety track record.Claude achieves high performance with MMLU (86.8%), GSM8K (92.5%), and DROP (83.4%) scores, excelling in reasoning and coding tasks. API latency averages 1.1s, and reliability is 99.8% under normal loads. Resource requirements are moderate, suitable for cloud deployments. Sub-metrics include accuracy (9.0/10), speed (8.7/10), reliability (9.2/10), and resource efficiency (8.5/10).</p>
+                    <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                        <i class="fas fa-crown mr-1"></i> Upgrade for full competitor analysis
+                    </button>
+                </div>
+                
+                <!-- Risk Flags & Caution Areas -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <h4 class="text-xl font-bold mb-6">Risk Flags & Caution Areas</h4>
+                    <p class="text-gray-700">While Claude is highly secure, potential risks include:
+                        <ul class="list-disc ml-6">
+                            <li><strong>Data Leakage</strong>: Non-zero risk of phishing attacks on Anthropic’s systems, though mitigated by encryption.</li>
+                            <li><strong>Misuse Potential</strong>: Malicious actors could generate code or text for cyberattacks or misinformation, requiring client-side monitoring.</li>
+                            <li><strong>Limited Real-Time Data</strong>: No web access limits up-to-date responses, impacting use cases like news analysis.</li>
+                            <li><strong>Support for Free Tier</strong>: Limited responsiveness may affect small businesses.</li>
+                        </ul>
+                    </p>
+                    <p class="text-gray-700 mt-4">Mitigation strategies include using content moderation tools, regular security audits, and clear usage policies.</p>
+                </div>
+                
+                <!-- Product Roadmap & Innovation Readiness -->
+                <div class="p-6 border-b border-gray-200 report-section">
+                    <h4 class="text-xl font-bold mb-6">Product Roadmap & Innovation Readiness</h4>
+                    <div class="mb-6">
+                        <canvas id="roadmapTimeline"></canvas>
+                    </div>
+                    <p class="text-gray-700">Anthropic’s roadmap includes Claude 4 (Q2 2025) with enhanced multimodal capabilities (e.g., auditory processing), advanced tool use, and deeper enterprise integrations. Innovations focus on ethical AI, with plans for real-time decision-making and expanded multilingual support. Alignment with emerging needs (e.g., global operations) is strong, scoring 9.0/10 for innovation readiness.</p>
+                    <button class="mt-2 text-sm text-blue-600 hover:underline flex items-center">
+                        <i class="fas fa-question-circle mr-1"></i> How was this score calculated?
+                    </button>
+                </div>
+                
+                <!-- Pro Features CTA -->
+                <div class="p-6 bg-gray-50 report-section">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-4 md:mb-0">
+                            <h4 class="text-xl font-bold mb-2">Unlock More with OCEAN-B Pro</h4>
+                            <p class="text-gray-600">Access historical trends, custom criteria, detailed competitor analysis, and priority support.</p>
+                        </div>
+                        <button class="bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition flex items-center justify-center whitespace-nowrap">
+                            <i class="fas fa-crown mr-2"></i> Upgrade to Pro Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8">How OCEAN-A Works</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition card-3d">
+                    <div class="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white text-2xl mb-4 mx-auto">1</div>
+                    <h3 class="text-xl font-bold mb-3 text-center">Automated Data Collection</h3>
+                    <p class="text-gray-600 text-center">Our system scans public sources including company websites, news articles, and regulatory filings to gather comprehensive data.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition card-3d">
+                    <div class="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white text-2xl mb-4 mx-auto">2</div>
+                    <h3 class="text-xl font-bold mb-3 text-center">Standardized Analysis</h3>
+                    <p class="text-gray-600 text-center">Each company is assessed using the same rigorous criteria, ensuring fair and consistent evaluations.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition card-3d">
+                    <div class="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white text-2xl mb-4 mx-auto">3</div>
+                    <h3 class="text-xl font-bold mb-3 text-center">Instant Report Generation</h3>
+                    <p class="text-gray-600 text-center">Receive your detailed assessment in seconds, with clear ratings and actionable insights.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimonials -->
+        <section class="mb-12 bg-gray-50 rounded-xl p-8">
+            <h2 class="text-3xl font-bold text-center mb-8">Trusted by Professionals</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4" ><img src="https://i.pinimg.com/736x/a2/78/42/a278425d344d53cac2da57612a714290.jpg" alt=""></div>
+                        <div>
+                            <h4 class="font-bold">Sarah Johnson</h4>
+                            <p class="text-gray-600 text-sm">Investment Analyst</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"OCEAN-A has transformed our due diligence process. We can now assess potential partners in minutes rather than days, with remarkably consistent results."</p>
+                    <div class="mt-4 flex">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"><img src="https://i.pinimg.com/736x/34/e4/cd/34e4cdd704f3f9bf22cbe6498bcb27ca.jpg" alt=""></div>
+                        <div>
+                            <h4 class="font-bold">Michael Chen</h4>
+                            <p class="text-gray-600 text-sm">Procurement Manager</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"The standardized assessment approach eliminates bias from our vendor selection process. The ability to challenge scores gives us confidence in the results."</p>
+                    <div class="mt-4 flex">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star-half-alt text-yellow-400"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">OCEAN-A</h3>
+                    <p class="text-gray-400">Automated company assessments powered by AI and public domain data.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Examples</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Support</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 OCEAN-A. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="fixed bottom-6 right-6">
+        <button class="w-14 h-14 bg-black text-white rounded-full shadow-lg hover:bg-gray-800 transition flex items-center justify-center floating">
+            <i class="fas fa-comment-dots text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Animation for report sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportSections = document.querySelectorAll('.report-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            reportSections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.6s ease';
+                observer.observe(section);
+            });
+            
+            // Score calculation popups
+            const scoreButtons = document.querySelectorAll('button:has(.fa-question-circle)');
+            scoreButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const parentSection = button.closest('.flex, .space-y-6').querySelector('h5').textContent;
+                    let message = '';
+                    if (parentSection === 'Functionality') {
+                        message = 'Score based on:\n1. Use case coverage (40%): Customer support, coding, content creation\n2. Feature depth (30%): Sentiment analysis, code generation\n3. Limitations (20%): No image generation\n4. Versatility (10%): Cross-industry applications';
+                    } else if (parentSection === 'Security') {
+                        message = 'Score based on:\n1. Data privacy (40%): 90-day retention, no training use\n2. Compliance (30%): HIPAA standards\n3. Vulnerability management (20%): Phishing risk mitigation\n4. Transparency (10%): Limited prompt monitoring details';
+                    } else if (parentSection === 'Integration') {
+                        message = 'Score based on:\n1. API flexibility (40%): CRM/ERP support\n2. Platform compatibility (30%): Tableau, Excel\n3. Ease of setup (20%): API documentation\n4. Connector availability (10%): Fewer pre-built options';
+                    } else if (parentSection === 'Performance Metrics') {
+                        message = 'Score based on:\n1. Accuracy (40%): MMLU, GSM8K scores\n2. Speed (30%): 1.1s API latency\n3. Reliability (20%): 99.8% uptime\n4. Resource efficiency (10%): Cloud scalability';
+                    } else if (parentSection === 'Total Cost of Ownership') {
+                        message = 'Score based on:\n1. Initial cost (40%): Free tier, low setup\n2. Ongoing fees (30%): Token-based pricing\n3. Implementation ease (20%): API simplicity\n4. Maintenance (10%): Cloud updates';
+                    } else if (parentSection === 'Financial Stability') {
+                        message = 'Score based on:\n1. Funding status (40%): $1.5B raised\n2. Business longevity (30%): 4 years\n3. Revenue growth (30%): Enterprise adoption';
+                    } else if (parentSection === 'Technical Expertise') {
+                        message = 'Score based on:\n1. Industry experience (40%): Finance, healthcare\n2. Innovation (30%): Constitutional AI\n3. Deployment success (30%): Enterprise case studies';
+                    } else if (parentSection === 'Support Structure') {
+                        message = 'Score based on:\n1. Responsiveness (40%): 24/7 Enterprise support\n2. Coverage (30%): Global availability\n3. Onboarding (30%): Limited free-tier support';
+                    } else if (parentSection === 'Client Retention Rates') {
+                        message = 'Score based on:\n1. Retention rate (50%): 90% reported\n2. Customer satisfaction (30%): Case studies\n3. Testimonial quality (20%): Verifiable examples';
+                    } else if (parentSection === 'Product Roadmap & Innovation Readiness') {
+                        message = 'Score based on:\n1. Planned features (40%): Claude 4, multimodal\n2. Alignment with trends (30%): Ethical AI, multilingual\n3. Innovation pipeline (20%): R&D focus\n4. Release timeline (10%): Q2 2025';
+                    }
+                    alert(message);
+                });
+            });
+            
+            // Upgrade buttons
+            const upgradeButtons = document.querySelectorAll('button:has(.fa-crown)');
+            upgradeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Upgrade to OCEAN-B Pro to unlock:\n\n• Historical trends\n• Custom assessment criteria\n• Detailed competitor analysis\n• Priority support\n\nRedirecting to pricing page...');
+                });
+            });
+
+            // Chart.js setup
+              // Performance Radar Chart for Claude AI's overall performance
+    var ctxRadar = document.getElementById('performanceRadarChart').getContext('2d');
+    var radarChart = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: ['Accuracy', 'Speed', 'Memory Usage', 'Throughput', 'Scalability'],
+            datasets: [{
+                label: 'Claude AI Performance',
+                data: [80, 90, 70, 85, 80],  // Example data for Claude AI's performance
+                backgroundColor:   'rgba(0, 123, 255, 0.2)',  // Soft blue for Claude AI
+                borderColor: 'grey',
+                borderWidth: 2,
+                pointBackgroundColor: 'grey',
+                pointBorderColor: '#fff',
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            scale: {
+                ticks: {
+                    beginAtZero: true,
+                    max: 100,
+                    stepSize: 20
+                },
+                grid: {
+                    color: 'rgba(0, 123, 255, 0.1)'  // Light grid lines
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: 'Poppins',
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        color: '#333'
+                    }
+                },
+                tooltip: {
+                    enabled: true,  // Ensure tooltips are enabled
+                    mode: 'nearest', // Show tooltip for the nearest item
+                    callbacks: {
+                        // Custom tooltip content to display value
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + '%'; // Adding percentage symbol
+                        }
+                    },
+                    titleFont: {
+                        family: 'Poppins',
+                        size: 16,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        family: 'Poppins',
+                        size: 14
+                    },
+                    backgroundColor: 'rgba(0, 123, 255, 0.8)',  // Tooltip background color
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#007bff',
+                    borderWidth: 1
+                }
+            }
+        }
+    });
+
+
+    // Claude AI: Comparative Radar Chart (internal dynamics)
+    var ctxRadarComparative = document.getElementById('radarChart').getContext('2d');
+    var radarChartComparative = new Chart(ctxRadarComparative, {
+        type: 'radar',
+        data: {
+            labels: ['Accuracy', 'Speed', 'Memory Usage', 'Throughput', 'Scalability'],
+            datasets: [
+                {
+                    label: 'Claude AI (V1)',
+                    data: [80, 90, 70, 85, 80],  // Example data for Claude AI's V1 performance
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',  // Soft blue for Claude AI V1
+                    borderColor: 'black',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'grey',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5
+                },
+                {
+                    label: 'Claude AI (V2)',
+                    data: [85, 92, 75, 90, 85],  // Example data for Claude AI V2 improvement
+                    backgroundColor: 'rgba(255, 87, 34, 0.2)',  // Soft orange for Claude AI V2
+                    borderColor: '#FF5722',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#FF5722',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scale: {
+                ticks: {
+                    beginAtZero: true,
+                    max: 100,
+                    stepSize: 20
+                },
+                grid: {
+                    color: 'rgba(0, 123, 255, 0.1)'  // Light grid lines
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: 'Poppins',
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        color: '#333'
+                    }
+                },
+                tooltip: {
+                    enabled: true,  // Ensure tooltips are enabled
+                    mode: 'nearest', // Show tooltip for the nearest item
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + '%'; // Adding percentage symbol
+                        }
+                    },
+                    titleFont: {
+                        family: 'Poppins',
+                        size: 16,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        family: 'Poppins',
+                        size: 14
+                    },
+                    backgroundColor: 'rgba(0, 123, 255, 0.8)',  // Tooltip background color
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#007bff',
+                    borderWidth: 1
+                }
+            }
+        }
+    });
+            // Client Retention Pie Chart
+            const retentionPie = document.getElementById('retentionPieChart').getContext('2d');
+new Chart(retentionPie, {
+    type: 'pie',
+    data: {
+        labels: [
+            'Long-Term Retained (12+ months)',
+            'Mid-Term Retained (6-12 months)',
+            'Newly Retained (0-6 months)',
+            'At Risk of Churn',
+            'Churned Clients'
+        ],
+        datasets: [{
+            data: [50, 20, 20, 5, 5],  // More granular breakdown
+            backgroundColor: [
+                '#000000', // Long-Term
+                '#555555', // Mid-Term
+                '#888888', // New
+                '#B0B0B0', // At Risk
+                '#D3D3D3'  // Churned
+            ],
+            borderColor: '#ffffff',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#333333',
+                    font: {
+                        family: 'Poppins',
+                        size: 14
+                    }
+                },
+                position: 'bottom'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        return `${label}: ${value}%`;
+                    }
+                },
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                titleFont: {
+                    family: 'Poppins',
+                    size: 16,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    family: 'Poppins',
+                    size: 14
+                },
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                borderColor: '#000000',
+                borderWidth: 1
+            }
+        }
+    }
+});
+
+
+            // Benchmark Bar Chart
+            const benchmarkBar = document.getElementById('benchmarkBarChart').getContext('2d');
+            new Chart(benchmarkBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Reasoning', 'Safety', 'Multimodal', 'Latency (s)', 'Cost ($/M tokens)'],
+                    datasets: [
+                        {
+                            label: 'Claude AI',
+                            data: [9.2, 9.5, 8.5, 1.1, 15],
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)'
+                        },
+                        {
+                            label: 'Industry Avg.',
+                            data: [8.0, 7.5, 7.0, 1.2, 20],
+                            backgroundColor: 'rgba(128, 128, 128, 0.5)'
+                        },
+                        {
+                            label: 'Top Performer',
+                            data: [9.5, 1.5, 9.0, 0.9, 10],
+                            backgroundColor: 'rgba(255, 165, 0, 0.5)'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#333333' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#333333' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#333333' } }
+                    }
+                }
+            });
+
+            // Roadmap Timeline (Line Chart as Proxy)
+            const roadmapTimeline = document.getElementById('roadmapTimeline').getContext('2d');
+            new Chart(roadmapTimeline, {
+                type: 'line',
+                data: {
+                    labels: ['Q4 2024', 'Q2 2025', 'Q4 2025'],
+                    datasets: [{
+                        label: 'Innovation Milestones',
+                        data: [8.0, 9.0, 9.5],
+                        borderColor: '#000000',
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: { color: '#333333' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#333333' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#333333' } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

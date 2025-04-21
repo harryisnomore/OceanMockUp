@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision API Comparator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+:root {
+    --primary: #ffffff;
+    --secondary: #888888;
+    --accent: #00e5ff;
+    --bg-dark: #000000;
+    --bg-card: #111111;
+    --border: #333333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 3rem;
+    letter-spacing: -0.05em;
+    background: linear-gradient(90deg, #000, #aaa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.navbar.navbar-expand-lg {
+    background: #000000;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-brand p {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+.nav-link {
+    color: var(--primary) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--secondary) !important;
+}
+
+.btn-login.dropdown-toggle {
+    background: linear-gradient(45deg, #ffffff, #f0f0f0);
+    color: #000000;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background: linear-gradient(45deg, #cccccc, #ffffff);
+    transform: translateY(-2px);
+}
+
+#themeToggle {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#themeToggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.toggle-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.toggle-item {
+    position: relative;
+}
+
+.toggle-item input {
+    display: none;
+}
+
+.toggle-item label {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: var(--secondary);
+}
+
+.toggle-item input:checked + label {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .chart-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.chart-card, .description-card, .suggestion-box, .feedback-section {
+    background-color: var(--bg-card);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+}
+
+.chart-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.description-card {
+    padding: 2rem;
+    margin-top: 3rem;
+    animation-delay: 0.4s;
+}
+
+.suggestion-box {
+    padding: 2rem;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation-delay: 0.5s;
+}
+
+.feedback-section {
+    padding: 2rem;
+    margin-top: 3rem;
+    animation-delay: 0.6s;
+}
+
+.chart-card:hover, .description-card:hover, .suggestion-box:hover, .feedback-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    border-color: var(--accent);
+}
+
+.chart-title, .description-title, .suggestion-title, .feedback-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+    color: var(--primary);
+}
+
+.chart-title::after, .description-title::after, .suggestion-title::after, .feedback-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.description-text {
+    color: var(--secondary);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 300px;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.8s ease-out forwards;
+    animation-delay: 0.3s;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.comparison-table th {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.comparison-table td {
+    color: var(--secondary);
+    font-size: 0.95rem;
+}
+
+.comparison-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.stars {
+    color: var(--secondary);
+    letter-spacing: 3px;
+}
+
+.stars.s5 {
+    color: var(--accent);
+}
+
+.suggestion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: var(--secondary);
+}
+
+.suggestion-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.suggested-solution {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.percentage {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.form-control {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--primary);
+    font-family: 'Inter', sans-serif;
+    min-height: 120px;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
+}
+
+.form-control::placeholder {
+    color: var(--secondary);
+}
+
+.rating-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rating-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--secondary);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rating-btn:hover, .rating-btn.active {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    border-color: var(--primary);
+}
+
+.submit-btn {
+    padding: 0.8rem 1.5rem;
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+#app.dark-mode {
+    --accent: #00e5ff;
+    --bg-dark: #000000;
+    --bg-card: #111111;
+    --border: #333333;
+}
+
+#app:not(.dark-mode) {
+    --primary: #000000;
+    --secondary: #444444;
+    --accent: #0078ff;
+    --bg-dark: #ffffff;
+    --bg-card: #f5f5f5;
+    --border: #dddddd;
+}
+
+#app:not(.dark-mode) .navbar {
+    background: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+#app:not(.dark-mode) .navbar-brand p {
+    color: #000000;
+}
+
+#app:not(.dark-mode) .nav-link {
+    color: var(--primary) !important;
+}
+
+#app:not(.dark-mode) .nav-link:hover {
+    color: var(--secondary) !important;
+}
+
+#app:not(.dark-mode) .btn-login {
+    background: linear-gradient(45deg, #333, #666);
+    color: #ffffff;
+}
+
+#app:not(.dark-mode) .btn-login:hover {
+    background: linear-gradient(45deg, #555, #888);
+}
+
+#app:not(.dark-mode) #themeToggle {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    color: #000000;
+}
+
+#app:not(.dark-mode) #themeToggle:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#app:not(.dark-mode) .stars {
+    color: var(--secondary);
+}
+
+#app:not(.dark-mode) .form-control::placeholder {
+    color: var(--secondary);
+}
+
+.parameter-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+    animation-delay: 0.3s;
+}
+
+.parameter-btn {
+    padding: 0.6rem 1.2rem;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    color: var(--secondary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.parameter-btn:hover, .parameter-btn.active {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.radar-chart-container {
+    margin-top: 3rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.8s ease-out forwards;
+    animation-delay: 0.4s;
+}
+
+.thank-you {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: var(--accent);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .comparison-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 576px) {
+    .toggle-item label {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+.title, .chart-card, .description-card, .suggestion-box, .feedback-section, .comparison-table, .parameter-selector, .radar-chart-container {
+    will-change: opacity, transform;
+}
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <p>Ocean</p>
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="#features">Features</a>
+                    <a class="nav-link" href="#pricing">Pricing</a>
+                    <a class="nav-link" href="gate.html">GATE</a>
+                    <div class="dropdown ms-3">
+                        <button class="btn btn-login dropdown-toggle" type="button">
+                            Log Out
+                        </button>
+                    </div>
+                    <button onclick="toggleTheme()" class="btn btn-sm btn-outline-dark ms-3" id="themeToggle" data-theme="dark">
+                        🌙
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <h1 class="title">AI Solution Comparator</h1>
+
+            <div class="toggle-group">
+                <div class="toggle-item">
+                    <input type="checkbox" id="solA" value="NLP Pro" checked>
+                    <label for="solA">NLP Pro</label>
+                </div>
+                <div class="toggle-item">
+                    <input type="checkbox" id="solB" value="AI Writer" checked>
+                    <label for="solB">AI Writer</label>
+                </div>
+                <div class="toggle-item">
+                    <input type="checkbox" id="solC" value="Vision API" checked>
+                    <label for="solC">Vision API</label>
+                </div>
+                <div class="toggle-item">
+                    <input type="checkbox" id="solD" value="Voice Assistant" checked>
+                    <label for="solD">Voice Assistant</label>
+                </div>
+            </div>
+
+            <div class="parameter-selector">
+                <button class="parameter-btn active" data-param="performance">Performance</button>
+                <button class="parameter-btn" data-param="cost">Cost Efficiency</button>
+                <button class="parameter-btn" data-param="integration">Integration Ease</button>
+                <button class="parameter-btn" data-param="scalability">Scalability</button>
+                <button class="parameter-btn" data-param="support">Support Quality</button>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h2 class="chart-title">Performance Comparison</h2>
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2 class="chart-title">Market Share</h2>
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card radar-chart-container">
+                <h2 class="chart-title">Comprehensive Comparison</h2>
+                <canvas id="radarChart"></canvas>
+            </div>
+
+            <div class="description-card">
+                <h2 class="description-title">Detailed Comparison</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>NLP Pro</th>
+                            <th>AI Writer</th>
+                            <th>Vision API</th>
+                            <th>Voice Assistant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Accuracy Rating</td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                        </tr>
+                        <tr>
+                            <td>Processing Speed</td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                            <td><div class="stars s3">★★★☆☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                        </tr>
+                        <tr>
+                            <td>Integration Complexity</td>
+                            <td><div class="stars s3">★★★☆☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s2">★★☆☆☆</div></td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                        </tr>
+                        <tr>
+                            <td>Cost-Efficiency</td>
+                            <td><div class="stars s3">★★★☆☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                            <td><div class="stars s2">★★☆☆☆</div></td>
+                        </tr>
+                        <tr>
+                            <td>Customization Options</td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                            <td><div class="stars s3">★★★☆☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s2">★★☆☆☆</div></td>
+                        </tr>
+                        <tr>
+                            <td>Support Quality</td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                            <td><div class="stars s3">★★★☆☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                        </tr>
+                        <tr>
+                            <td>Documentation</td>
+                            <td><div class="stars s5">★★★★★</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s4">★★★★☆</div></td>
+                            <td><div class="stars s3">★★★☆☆</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="description-card">
+                <h2 class="description-title">Solution Overview</h2>
+                <p id="description" class="description-text">
+                    This interactive tool helps you compare multiple AI solutions to make informed decisions for your specific needs. Toggle between different solutions to dynamically update all visualizations. The performance graph provides insights into metrics such as accuracy, speed, and reliability, while the radar chart offers a comprehensive view across all dimensions. The detailed comparison table breaks down specific features with ratings, and the market share chart reflects current industry adoption. All visuals are interactive and designed to deliver clear insights in a modern, sophisticated interface.
+                </p>
+            </div>
+
+            <div class="suggestion-box">
+                <h2 class="suggestion-title">Our Recommendation</h2>
+                <div class="suggestion-content">
+                    <p class="suggestion-text">Based on your selected parameters and priorities, we recommend:</p>
+                    <p class="suggested-solution">NLP Pro</p>
+                    <p class="suggestion-text">
+                        This solution offers the best overall performance with a <span class="percentage">92%</span> match to your requirements.
+                        It excels particularly in accuracy and customization options, making it ideal for enterprise applications.
+                    </p>
+                    <p class="suggestion-text">
+                        For more cost-sensitive implementations, consider Vision API as an alternative, which offers <span class="percentage">85%</span> compatibility with good scalability.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <h2 class="feedback-title">Share Your Feedback</h2>
+                <form class="feedback-form" id="feedbackForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="Your email">
+                    </div>
+                    <div class="form-group">
+                        <label>How satisfied are you with this comparison tool?</label>
+                        <div class="rating-group">
+                            <button type="button" class="rating-btn" data-rating="1">1</button>
+                            <button type="button" class="rating-btn" data-rating="2">2</button>
+                            <button type="button" class="rating-btn" data-rating="3">3</button>
+                            <button type="button" class="rating-btn" data-rating="4">4</button>
+                            <button type="button" class="rating-btn" data-rating="5">5</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback">Comments</label>
+                        <textarea id="feedback" class="form-control" placeholder="Share your thoughts on how we can improve this tool..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Feedback</button>
+                </form>
+                <div class="thank-you">Thank you for your feedback! We'll use it to improve our tool.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+          function toggleTheme() {
+    const app = document.getElementById('app');
+    const themeToggle = document.getElementById('themeToggle');
+    const navbar = document.querySelector('.navbar');
+    const body = document.body;
+
+    if (app.classList.contains('dark-mode')) {
+        // Switch to light mode
+        app.classList.remove('dark-mode');
+        body.style.backgroundColor = '#ffffff';
+        themeToggle.innerHTML = '🌙';
+        themeToggle.setAttribute('data-theme', 'dark');
+        themeToggle.style.border = '1px solid rgba(0, 0, 0, 0.3)';
+        themeToggle.style.color = '#000000';
+        navbar.style.backgroundColor = 'white';
+        navbar.style.borderBottom = '1px solid rgba(0, 0, 0, 0.1)';
+        navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+        document.querySelector('.navbar-brand p').style.setProperty('color', '#000000', 'important');
+    } else {
+        // Switch to dark mode
+        app.classList.add('dark-mode');
+        body.style.backgroundColor = '#000000';
+        themeToggle.innerHTML = '☀️';
+        themeToggle.setAttribute('data-theme', 'light');
+        themeToggle.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+        themeToggle.style.color = '#ffffff';
+        navbar.style.backgroundColor = '#000000';
+        navbar.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+        navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+        document.querySelector('.navbar-brand p').style.setProperty('color', '#ffffff', 'important');
+    }
+}
+
+        document.addEventListener('DOMContentLoaded', () => {
+        // Chart.js initialization
+        const barChartCtx = document.getElementById('barChart').getContext('2d');
+        const pieChartCtx = document.getElementById('pieChart').getContext('2d');
+        const radarChartCtx = document.getElementById('radarChart').getContext('2d');
+
+        // Sample data for charts
+        const solutionsData = {
+            'NLP Pro': {
+                performance: 92,
+                cost: 75,
+                integration: 80,
+                scalability: 88,
+                support: 85,
+                marketShare: 30
+            },
+            'AI Writer': {
+                performance: 85,
+                cost: 82,
+                integration: 90,
+                scalability: 80,
+                support: 92,
+                marketShare: 25
+            },
+            'Vision API': {
+                performance: 78,
+                cost: 95,
+                integration: 70,
+                scalability: 85,
+                support: 75,
+                marketShare: 20
+            },
+            'Voice Assistant': {
+                performance: 80,
+                cost: 65,
+                integration: 95,
+                scalability: 75,
+                support: 80,
+                marketShare: 25
+            }
+        };
+
+        // Initialize charts
+        let barChart = new Chart(barChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['NLP Pro', 'AI Writer', 'Vision API', 'Voice Assistant'],
+                datasets: [{
+                    label: 'Performance',
+                    data: [92, 85, 78, 80],
+                    backgroundColor: ['#4A90E2', '#50C878', '#FF6B6B', '#FFD166']
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+
+        let pieChart = new Chart(pieChartCtx, {
+            type: 'pie',
+            data: {
+                labels: ['NLP Pro', 'AI Writer', 'Vision API', 'Voice Assistant'],
+                datasets: [{
+                    data: [30, 25, 20, 25],
+                    backgroundColor: ['#4A90E2', '#50C8778', '#FF6B6B', '#FFD166']
+                }]
+            }
+        });
+
+        let radarChart = new Chart(radarChartCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Performance', 'Cost', 'Integration', 'Scalability', 'Support'],
+                datasets: [
+                    {
+                        label: 'NLP Pro',
+                        data: [92, 75, 80, 88, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                        borderColor: '#4A90E2'
+                    },
+                    {
+                        label: 'AI Writer',
+                        data: [85, 82, 90, 80, 92],
+                        fill: true,
+                        backgroundColor: 'rgba(80, 200, 120, 0.2)',
+                        borderColor: '#50C878'
+                    },
+                    {
+                        label: 'Vision API',
+                        data: [78, 95, 70, 85, 75],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        borderColor: '#FF6B6B'
+                    },
+                    {
+                        label: 'Voice Assistant',
+                        data: [80, 65, 95, 75, 80],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 209, 102, 0.2)',
+                        borderColor: '#FFD166'
+                    }
+                ]
+            },
+            options: {
+                elements: {
+                    line: { borderWidth: 3 }
+                },
+                scales: {
+                    r: { angleLines: { display: true }, suggestedMin: 0, suggestedMax: 100 }
+                }
+            }
+        });
+
+        // Parameter selector functionality
+        const parameterButtons = document.querySelectorAll('.parameter-btn');
+        parameterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                parameterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const param = button.dataset.param;
+                const paramMap = {
+                    'performance': 'Performance',
+                    'cost': 'Cost Efficiency',
+                    'integration': 'Integration Ease',
+                    'scalability': 'Scalability',
+                    'support': 'Support Quality'
+                };
+
+                updateBarChart(param, paramMap[param]);
+                updateRecommendation();
+            });
+        });
+
+        // Solution toggle functionality
+        const solutionCheckboxes = document.querySelectorAll('.toggle-item input');
+        solutionCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updateCharts();
+                updateRecommendation();
+            });
+        });
+
+        // Update bar chart based on selected parameter
+        function updateBarChart(param, label) {
+            const selectedSolutions = Array.from(solutionCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            barChart.data.labels = selectedSolutions;
+            barChart.data.datasets[0].label = label;
+            barChart.data.datasets[0].data = selectedSolutions.map(sol => solutionsData[sol][param]);
+            barChart.data.datasets[0].backgroundColor = selectedSolutions.map((_, i) =>
+                ['#4A90E2', '#50C878', '#FF6B6B', '#FFD166'][i % 4]
+            );
+            barChart.update();
+        }
+
+        // Update all charts based on selected solutions
+        function updateCharts() {
+            const selectedSolutions = Array.from(solutionCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            // Update bar chart
+            const activeParam = document.querySelector('.parameter-btn.active').dataset.param;
+            const paramMap = {
+                'performance': 'Performance',
+                'cost': 'Cost Efficiency',
+                'integration': 'Integration Ease',
+                'scalability': 'Scalability',
+                'support': 'Support Quality'
+            };
+            updateBarChart(activeParam, paramMap[activeParam]);
+
+            // Update pie chart
+            pieChart.data.labels = selectedSolutions;
+            pieChart.data.datasets[0].data = selectedSolutions.map(sol => solutionsData[sol].marketShare);
+            pieChart.data.datasets[0].backgroundColor = selectedSolutions.map((_, i) =>
+                ['#4A90E2', '#50C878', '#FF6B6B', '#FFD166'][i % 4]
+            );
+            pieChart.update();
+
+            // Update radar chart
+            radarChart.data.datasets = selectedSolutions.map((sol, i) => ({
+                label: sol,
+                data: [
+                    solutionsData[sol].performance,
+                    solutionsData[sol].cost,
+                    solutionsData[sol].integration,
+                    solutionsData[sol].scalability,
+                    solutionsData[sol].support
+                ],
+                fill: true,
+                backgroundColor: `rgba(${[74,80,255,255][i]}, ${[144,200,107,209][i]}, ${[226,120,107,102][i]}, 0.2)`,
+                borderColor: ['#4A90E2', '#50C878', '#FF6B6B', '#FFD166'][i]
+            }));
+            radarChart.update();
+        }
+
+        // Update recommendation tile
+        function updateRecommendation() {
+            const selectedSolutions = Array.from(solutionCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            if (selectedSolutions.length === 0) {
+                document.querySelector('.suggested-solution').textContent = 'None';
+                document.querySelectorAll('.suggestion-content .suggestion-text')[0].textContent = 'Please select at least one solution to see a recommendation.';
+                document.querySelectorAll('.suggestion-content .suggestion-text')[1].textContent = '';
+                document.querySelectorAll('.suggestion-content .suggestion-text')[2].textContent = '';
+                return;
+            }
+
+            const activeParam = document.querySelector('.parameter-btn.active').dataset.param;
+
+            // Find the best solution based on the active parameter
+            let bestSolution = selectedSolutions[0];
+            let bestScore = solutionsData[bestSolution][activeParam];
+
+            selectedSolutions.forEach(sol => {
+                if (solutionsData[sol][activeParam] > bestScore) {
+                    bestSolution = sol;
+                    bestScore = solutionsData[sol][activeParam];
+                }
+            });
+
+            // Find an alternative solution (the next best)
+            let alternativeSolution = null;
+            let alternativeScore = -1;
+
+            selectedSolutions.forEach(sol => {
+                if (sol !== bestSolution && solutionsData[sol][activeParam] > alternativeScore) {
+                    alternativeSolution = sol;
+                    alternativeScore = solutionsData[sol][activeParam];
+                }
+            });
+
+            document.querySelector('.suggested-solution').textContent = bestSolution;
+            document.querySelectorAll('.suggestion-content .suggestion-text')[0].textContent = `Based on your selected parameter (${document.querySelector('.parameter-btn.active').textContent}), we recommend:`;
+            document.querySelectorAll('.suggestion-content .suggestion-text')[1].textContent = `${bestSolution} which has the highest score in ${document.querySelector('.parameter-btn.active').textContent} (${bestScore}%).`;
+
+            if (alternativeSolution) {
+                document.querySelectorAll('.suggestion-content .suggestion-text')[2].textContent = `As an alternative, consider ${alternativeSolution} with a score of ${alternativeScore}% in ${document.querySelector('.parameter-btn.active').textContent}.`;
+            } else {
+                document.querySelectorAll('.suggestion-content .suggestion-text')[2].textContent = '';
+            }
+        }
+
+        // Initial chart update
+        updateCharts();
+        updateRecommendation();
+
+        // Feedback form submission
+        const feedbackForm = document.getElementById('feedbackForm');
+        const thankYouMessage = document.querySelector('.thank-you');
+
+        feedbackForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Simulate feedback submission
+            console.log('Feedback submitted!');
+            feedbackForm.style.display = 'none';
+            thankYouMessage.style.display = 'block';
+            setTimeout(() => {
+                feedbackForm.style.display = 'flex';
+                thankYouMessage.style.display = 'none';
+                feedbackForm.reset();
+                resetRatingButtons();
+            }, 3000);
+        });
+
+        const ratingButtons = document.querySelectorAll('.rating-btn');
+        ratingButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                ratingButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function resetRatingButtons() {
+            ratingButtons.forEach(btn => btn.classList.remove('active'));
+        }
+    });
+    </script>
+</body>
+</html>
